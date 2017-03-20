@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Movies</string>
+    <string name="movie_api_key">ENTER_YOUR_KEY_HERE</string>
+
+    <!--Menu options-->
+    <string name="action_share">Share</string>
+    <string name="action_popular">Popular</string>
+    <string name="action_top_rated">Top rated</string>
+
+    <string name="sort_popular">popular</string>
+    <string name="sort_top_rated">top_rated</string>
 </resources>
