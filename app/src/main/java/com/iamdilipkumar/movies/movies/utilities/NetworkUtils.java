@@ -19,11 +19,12 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
+
     // Add the movie API base url
     private final static String MOVIEDB_BASE_URL = "";
 
     // Add the movie API to retrieve the URL for the images
-    private final static String MOVIE_IMAGE_POSTER_BASE_URL = "";
+    public final static String MOVIE_IMAGE_POSTER_BASE_URL = "";
 
     private final static String PARAM_API = "api_key";
 

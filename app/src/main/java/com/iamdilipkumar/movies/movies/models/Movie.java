@@ -1,5 +1,7 @@
 package com.iamdilipkumar.movies.movies.models;
 
+import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
+
 /**
  * Created on 21/03/17.
  */
@@ -18,28 +20,27 @@ public class Movie {
     /**
      * Constructor to initialize the Movie class for referencing in adapter and activity
      *
-     * @param movieTitle store the title of the movie
-     * @param moviePlot store the plot of the movie
-     * @param moviePoster store the url for the poster
-     * @param movieVoteCount store the vote count of the movie
-     * @param movieRelease store the release date of the movie
+     * @param movieTitle       store the title of the movie
+     * @param moviePlot        store the plot of the movie
+     * @param moviePoster      store the url for the poster
+     * @param movieVoteCount   store the vote count of the movie
+     * @param movieRelease     store the release date of the movie
      * @param movieVoteAverage store the average voting for the movie
-     * @param movieLanguage store the original lanugage of them movie
-     * @param movieBanner store the banner url of the movie
+     * @param movieLanguage    store the original lanugage of them movie
+     * @param movieBanner      store the banner url of the movie
      */
     public Movie(String movieTitle, String moviePlot, String moviePoster, String movieVoteCount, String movieRelease, String movieVoteAverage, String movieLanguage, String movieBanner) {
         this.movieTitle = movieTitle;
         this.moviePlot = moviePlot;
-        this.moviePoster = "http://image.tmdb.org/t/p/w342" + moviePoster;
+        this.moviePoster = NetworkUtils.MOVIE_IMAGE_POSTER_BASE_URL + "w185" + moviePoster;
         this.movieVoteCount = movieVoteCount;
         this.movieRelease = movieRelease;
         this.movieVoteAverage = movieVoteAverage;
         this.movieLanguage = movieLanguage;
-        this.movieBanner = "http://image.tmdb.org/t/p/w500" + movieBanner;
+        this.movieBanner = NetworkUtils.MOVIE_IMAGE_POSTER_BASE_URL + "w500" + movieBanner;
     }
 
     /**
-     *
      * @return the title of the movie in string format
      */
     public String getMovieTitle() {
@@ -47,7 +48,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return the movie plot in string format
      */
     public String getMoviePlot() {
@@ -55,7 +55,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return return the poster url in string format
      */
     public String getMoviePoster() {
@@ -63,7 +62,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return the movie vote count in string format
      */
     public String getMovieVoteCount() {
@@ -71,7 +69,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return the movie release date in string format
      */
     public String getMovieRelease() {
@@ -79,7 +76,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return the average vote rate of the movie in string format
      */
     public String getMovieVoteAverage() {
@@ -87,7 +83,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return the original lanugage of the movie in string format
      */
     public String getMovieLanguage() {
@@ -95,7 +90,6 @@ public class Movie {
     }
 
     /**
-     *
      * @return the movie banner url in string format
      */
     public String getMovieBanner() {
