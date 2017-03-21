@@ -1,10 +1,6 @@
 package com.iamdilipkumar.movies.movies.utilities;
 
-import android.content.res.Resources;
 import android.net.Uri;
-
-import com.iamdilipkumar.movies.movies.R;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -25,7 +21,11 @@ public class NetworkUtils {
 
     private final static String MOVIEDB_BASE_URL = "";
 
+    private final static String MOVIE_IMAGE_BASE_URL = "";
+
     private final static String PARAM_API = "api_key";
+
+    private final static String API_KEY = "";
 
     /**
      *  Builds the url with the sort order and api key
@@ -36,7 +36,7 @@ public class NetworkUtils {
      */
     public static URL buildUrl(String sortingOrder) throws MalformedURLException {
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL+sortingOrder).buildUpon()
-                .appendQueryParameter(PARAM_API, Resources.getSystem().getString(R.string.movie_api_key))
+                .appendQueryParameter(PARAM_API, API_KEY)
                 .build();
 
         return new URL(builtUri.toString());
