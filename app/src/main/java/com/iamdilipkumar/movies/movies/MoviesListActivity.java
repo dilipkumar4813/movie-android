@@ -37,7 +37,9 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     ProgressBar mLoading;
     TextView mErrorText;
+
     RecyclerView mMoviesList;
+
     MoviesAdapter mAdapter;
     ArrayList<Movie> mMovies = new ArrayList<>();
 
@@ -79,6 +81,9 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         return true;
     }
 
+    /**
+     * Method to share the data over various app installed on the device
+     */
     private void shareText() {
         String mimeType = "text/plain";
         String title = "Share movie app";
@@ -115,6 +120,11 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         }
     }
 
+    /**
+     * Implemeting the interface created in the MoviesAdapter {@link MoviesAdapter}
+     *
+     * @param position based on poisting passing data to detail activity
+     */
     @Override
     public void onMovieItemClick(int position) {
         Movie movie = mMovies.get(position);
@@ -144,6 +154,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
         @Override
         protected void onPreExecute() {
+            mErrorText.setVisibility(View.INVISIBLE);
             mLoading.setVisibility(View.VISIBLE);
             doNotShowList();
             super.onPreExecute();

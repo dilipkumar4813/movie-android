@@ -10,4 +10,6 @@
     <string name="sort_top_rated">top_rated</string>
 
     <string name="error_message">Could not load, Please try again</string>
+
+    <string name="movie_average_vote">Average rating: </string>
 </resources>

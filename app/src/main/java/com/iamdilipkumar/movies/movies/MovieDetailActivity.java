@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 public class MovieDetailActivity extends AppCompatActivity {
 
     ImageView mPosterImage, mBannerImage;
-    TextView mTitleText,mPlotText,mReleaseText;
+    TextView mTitleText, mPlotText, mReleaseText, mVoteAverageText,mMovieLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         mTitleText = (TextView) findViewById(R.id.tv_movie_title);
         mPlotText = (TextView) findViewById(R.id.tv_movie_plot);
         mReleaseText = (TextView) findViewById(R.id.tv_movie_release_date);
+        mVoteAverageText = (TextView) findViewById(R.id.tv_movie_average_vote);
+        mMovieLanguage = (TextView) findViewById(R.id.tv_movie_language);
 
         Intent savedIntent = getIntent();
 
@@ -33,5 +35,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mTitleText.setText(savedIntent.getStringExtra("title"));
         mPlotText.setText(savedIntent.getStringExtra("plot"));
         mReleaseText.setText(savedIntent.getStringExtra("release"));
+        mVoteAverageText.setText(getString(R.string.movie_average_vote) + savedIntent.getStringExtra("average"));
+        mMovieLanguage.setText("Language: "+savedIntent.getStringExtra("language"));
     }
 }
