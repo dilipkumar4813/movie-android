@@ -1,14 +1,20 @@
 package com.iamdilipkumar.movies.movies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.iamdilipkumar.movies.movies.adapters.MoviesAdapter;
+import com.iamdilipkumar.movies.movies.models.Movie;
 import com.iamdilipkumar.movies.movies.utilities.MoviesJsonUtils;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
 
@@ -17,6 +23,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Launcher activity that shows movies in grid layout
@@ -26,10 +33,13 @@ import java.net.URL;
  * @version 1.0
  */
 
-public class MoviesListActivity extends AppCompatActivity {
+public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener {
 
     ProgressBar mLoading;
-    TextView mDisplayTextView;
+    TextView mErrorText;
+    RecyclerView mMoviesList;
+    MoviesAdapter mAdapter;
+    ArrayList<Movie> mMovies = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +47,11 @@ public class MoviesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_list);
 
         mLoading = (ProgressBar) findViewById(R.id.pb_loading_data);
-        mDisplayTextView = (TextView) findViewById(R.id.tv_display_data);
+        mErrorText = (TextView) findViewById(R.id.tv_loading_message);
+
+        mMoviesList = (RecyclerView) findViewById(R.id.rv_movies_list);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        mMoviesList.setLayoutManager(mGridLayoutManager);
 
         getMoviesList(getString(R.string.sort_popular));
     }
@@ -58,18 +72,32 @@ public class MoviesListActivity extends AppCompatActivity {
                 getMoviesList(getString(R.string.sort_top_rated));
                 break;
             case R.id.action_share:
+                shareText();
                 break;
         }
 
         return true;
     }
 
+    private void shareText() {
+        String mimeType = "text/plain";
+        String title = "Share movie app";
+        String textToShare = "Check out the coolest app to view the most popular and top rated apps";
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setType(mimeType)
+                .setChooserTitle(title)
+                .setText(textToShare)
+                .startChooser();
+    }
+
     private void showList() {
-        mDisplayTextView.setVisibility(View.VISIBLE);
+        mErrorText.setVisibility(View.INVISIBLE);
+        mMoviesList.setVisibility(View.VISIBLE);
     }
 
     private void doNotShowList() {
-        mDisplayTextView.setVisibility(View.INVISIBLE);
+        mMoviesList.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -81,17 +109,38 @@ public class MoviesListActivity extends AppCompatActivity {
     private void getMoviesList(String sortOrder) {
         try {
             URL url = NetworkUtils.buildUrl(sortOrder);
-            new MoviesQueryTask().execute(url);
+            new MoviesQueryTask(this).execute(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onMovieItemClick(int position) {
+        Movie movie = mMovies.get(position);
+        Intent movieIntent = new Intent(this, MovieDetailActivity.class);
+        movieIntent.putExtra("title", movie.getMovieTitle());
+        movieIntent.putExtra("plot", movie.getMoviePlot());
+        movieIntent.putExtra("banner", movie.getMovieBanner());
+        movieIntent.putExtra("poster", movie.getMoviePoster());
+        movieIntent.putExtra("release", movie.getMovieRelease());
+        movieIntent.putExtra("language", movie.getMovieLanguage());
+        movieIntent.putExtra("votes", movie.getMovieVoteCount());
+        movieIntent.putExtra("average", movie.getMovieVoteAverage());
+        startActivity(movieIntent);
     }
 
     /**
      * Async task for network connection
      * TMDB api call {@link NetworkUtils} and parse the json object
      */
-    private class MoviesQueryTask extends AsyncTask<URL, Void, String[]> {
+    private class MoviesQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
+
+        MoviesAdapter.MovieItemClickListener mMovieItemClickListener;
+
+        MoviesQueryTask(MoviesAdapter.MovieItemClickListener movieItemClickListener) {
+            mMovieItemClickListener = movieItemClickListener;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -101,12 +150,14 @@ public class MoviesListActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String[] doInBackground(URL... params) {
+        protected ArrayList<Movie> doInBackground(URL... params) {
             URL searchUrl = params[0];
             try {
                 String moviesResults = NetworkUtils.getMoviesListFromHttpUrl(searchUrl);
                 try {
-                    return MoviesJsonUtils.getMoviesFromJson(moviesResults);
+                    mMovies.clear();
+                    mMovies = MoviesJsonUtils.getMoviesFromJson(moviesResults);
+                    return mMovies;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -117,15 +168,15 @@ public class MoviesListActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String[] movies) {
+        protected void onPostExecute(ArrayList<Movie> movies) {
             mLoading.setVisibility(View.INVISIBLE);
 
             if (movies != null) {
-                for (String movie : movies) {
-                    mDisplayTextView.append(movie + "\n\n\n");
-                }
-
+                mAdapter = new MoviesAdapter(movies, mMovieItemClickListener);
+                mMoviesList.setAdapter(mAdapter);
                 showList();
+            } else {
+                mErrorText.setVisibility(View.VISIBLE);
             }
         }
     }
