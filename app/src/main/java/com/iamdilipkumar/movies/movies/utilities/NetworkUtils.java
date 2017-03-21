@@ -19,13 +19,16 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private final static String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/movie/";
+    // Add the movie API base url
+    private final static String MOVIEDB_BASE_URL = "";
 
-    private final static String MOVIE_IMAGE_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+    // Add the movie API to retrieve the URL for the images
+    private final static String MOVIE_IMAGE_POSTER_BASE_URL = "";
 
     private final static String PARAM_API = "api_key";
 
-    private final static String API_KEY = "100789a73476610c53983a68a353899d";
+    // Add the movie API key for TMDB
+    private final static String API_KEY = "";
 
     /**
      *  Builds the url with the sort order and api key
