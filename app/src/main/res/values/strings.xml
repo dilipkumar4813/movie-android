@@ -8,4 +8,6 @@
 
     <string name="sort_popular">popular</string>
     <string name="sort_top_rated">top_rated</string>
+
+    <string name="error_message">Could not load, Please try again</string>
 </resources>
