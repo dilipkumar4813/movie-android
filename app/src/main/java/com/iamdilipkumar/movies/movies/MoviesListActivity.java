@@ -55,22 +55,37 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
         mMoviesList.setLayoutManager(mGridLayoutManager);
 
+        setTitle(getString(R.string.action_popular));
         getMoviesList(getString(R.string.sort_popular));
     }
 
+    /**
+     * Method to inflate the menu created for the activity
+     *
+     * @param menu used for creating the menu
+     * @return will always return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+    /**
+     * Method to handle the clicks on the menu
+     *
+     * @param item the item in the menu that was clicked
+     * @return will always return true
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_movies_popular:
+                setTitle(getString(R.string.action_popular));
                 getMoviesList(getString(R.string.sort_popular));
                 break;
             case R.id.action_movies_top:
+                setTitle(getString(R.string.action_top_rated));
                 getMoviesList(getString(R.string.sort_top_rated));
                 break;
             case R.id.action_share:
@@ -96,11 +111,17 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
                 .startChooser();
     }
 
+    /**
+     * Method to hide the error message and show the movies list
+     */
     private void showList() {
         mErrorText.setVisibility(View.INVISIBLE);
         mMoviesList.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Method to hide the list
+     */
     private void doNotShowList() {
         mMoviesList.setVisibility(View.INVISIBLE);
     }
@@ -166,7 +187,6 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
             try {
                 String moviesResults = NetworkUtils.getMoviesListFromHttpUrl(searchUrl);
                 try {
-                    mMovies.clear();
                     mMovies = MoviesJsonUtils.getMoviesFromJson(moviesResults);
                     return mMovies;
                 } catch (JSONException e) {
