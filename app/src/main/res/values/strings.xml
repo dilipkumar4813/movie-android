@@ -3,13 +3,22 @@
 
     <!--Menu options-->
     <string name="action_share">Share</string>
-    <string name="action_popular">Popular</string>
-    <string name="action_top_rated">Top rated</string>
+    <string name="action_popular">Popular Movies</string>
+    <string name="action_top_rated">Top Rated Movies</string>
 
     <string name="sort_popular">popular</string>
     <string name="sort_top_rated">top_rated</string>
 
     <string name="error_message">Could not load, Please try again</string>
 
+    <!-- placeholders -->
+    <string name="movie_poster">Movie poster</string>
+    <string name="movie_banner">Movie banner</string>
+
     <string name="movie_average_vote">Average rating: </string>
+    <string name="movie_language">Language: </string>
+
+    <string name="movie_title">Title</string>
+    <string name="movie_release">Release date</string>
+    <string name="movie_plot">Movie plot</string>
 </resources>
