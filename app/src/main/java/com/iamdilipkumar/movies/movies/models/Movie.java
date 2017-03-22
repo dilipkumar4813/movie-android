@@ -3,7 +3,12 @@ package com.iamdilipkumar.movies.movies.models;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
 
 /**
+ * Model to hold the data received from the API call
+ *
  * Created on 21/03/17.
+ *
+ * @author dilipkumar4813
+ * @version 1.0
  */
 
 public class Movie {
@@ -32,12 +37,12 @@ public class Movie {
     public Movie(String movieTitle, String moviePlot, String moviePoster, String movieVoteCount, String movieRelease, String movieVoteAverage, String movieLanguage, String movieBanner) {
         this.movieTitle = movieTitle;
         this.moviePlot = moviePlot;
-        this.moviePoster = NetworkUtils.MOVIE_IMAGE_POSTER_BASE_URL + "w185" + moviePoster;
+        this.moviePoster = NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_POSTER_SIZE + moviePoster;
         this.movieVoteCount = movieVoteCount;
         this.movieRelease = movieRelease;
         this.movieVoteAverage = movieVoteAverage;
         this.movieLanguage = movieLanguage;
-        this.movieBanner = NetworkUtils.MOVIE_IMAGE_POSTER_BASE_URL + "w500" + movieBanner;
+        this.movieBanner = NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_BANNER_SIZE + movieBanner;
     }
 
     /**
