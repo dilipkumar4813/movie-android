@@ -19,12 +19,13 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
+    private final static String MOVIEDB_BASE_URL = "https://api.themoviedb.org/3/movie/";
 
-    // Add the movie API base url
-    private final static String MOVIEDB_BASE_URL = "";
+    public final static String MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
 
-    // Add the movie API to retrieve the URL for the images
-    public final static String MOVIE_IMAGE_POSTER_BASE_URL = "";
+    public final static String MOVIE_POSTER_SIZE = "w185";
+
+    public final static String MOVIE_BANNER_SIZE = "w500";
 
     private final static String PARAM_API = "api_key";
 
@@ -72,7 +73,6 @@ public class NetworkUtils {
         } finally {
             connection.disconnect();
         }
-
     }
 
 }
