@@ -30,7 +30,7 @@ The screen will show the details of the movie that has been selected and will sh
 
 ## How to use the source code
 
-Download or clone the repository on the your local machine, register in [The movie database](https://www.themoviedb.org/?language=en). Create an API using the instructions provided in the website, once you have received the API key copy and paste it within the NetworkUtils java class in line number 30. Build and run the application.
+Download or clone the repository on the your local machine, register in [The movie database](https://www.themoviedb.org/?language=en). Create an API using the instructions provided in the website, once you have received the API key copy and paste it within the NetworkUtils java class in line number 33. Build and run the application.
 
 ## Libraries
 
