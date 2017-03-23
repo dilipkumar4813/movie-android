@@ -21,4 +21,9 @@
     <string name="movie_title">Title</string>
     <string name="movie_release">Release date</string>
     <string name="movie_plot">Movie plot</string>
+
+    <!--Text to share-->
+    <string name="mime_type">text/plain</string>
+    <string name="share_title">Share movie app</string>
+    <string name="share_content">Check out the coolest app to view the most popular and top rated apps</string>
 </resources>
