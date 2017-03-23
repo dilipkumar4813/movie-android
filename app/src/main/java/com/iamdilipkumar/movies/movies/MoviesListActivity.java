@@ -25,6 +25,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Launcher activity that shows movies in grid layout
  * Created on 20/03/2017
@@ -35,9 +38,12 @@ import java.util.ArrayList;
 
 public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener {
 
+    @BindView(R.id.pb_loading_data)
     ProgressBar mLoading;
+    @BindView(R.id.tv_loading_message)
     TextView mErrorText;
 
+    @BindView(R.id.rv_movies_list)
     RecyclerView mMoviesList;
 
     MoviesAdapter mAdapter;
@@ -47,11 +53,8 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
+        ButterKnife.bind(this);
 
-        mLoading = (ProgressBar) findViewById(R.id.pb_loading_data);
-        mErrorText = (TextView) findViewById(R.id.tv_loading_message);
-
-        mMoviesList = (RecyclerView) findViewById(R.id.rv_movies_list);
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
         mMoviesList.setLayoutManager(mGridLayoutManager);
 
@@ -100,9 +103,9 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
      * Method to share the data over various app installed on the device
      */
     private void shareText() {
-        String mimeType = "text/plain";
-        String title = "Share movie app";
-        String textToShare = "Check out the coolest app to view the most popular and top rated apps";
+        String mimeType = getString(R.string.mime_type);
+        String title = getString(R.string.share_title);
+        String textToShare = getString(R.string.share_content);
         ShareCompat.IntentBuilder
                 .from(this)
                 .setType(mimeType)

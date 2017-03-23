@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Class to show the details of the movie
  * By using the data that was passed from {@link MoviesListActivity#onMovieItemClick(int)}
@@ -18,8 +21,14 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieDetailActivity extends AppCompatActivity {
 
-    ImageView mPosterImage, mBannerImage;
-    TextView mTitleText, mPlotText, mReleaseText, mVoteAverageText, mMovieLanguage;
+    @BindView(R.id.iv_movie_poster) ImageView mPosterImage;
+    @BindView(R.id.iv_movie_banner) ImageView mBannerImage;
+
+    @BindView(R.id.tv_movie_title) TextView mTitleText;
+    @BindView(R.id.tv_movie_plot) TextView mPlotText;
+    @BindView(R.id.tv_movie_release_date) TextView mReleaseText;
+    @BindView(R.id.tv_movie_average_vote) TextView mVoteAverageText;
+    @BindView(R.id.tv_movie_language) TextView mMovieLanguage;
 
     String movieVoteAverage, movieLanugage;
 
@@ -36,13 +45,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        mBannerImage = (ImageView) findViewById(R.id.iv_movie_banner);
-        mPosterImage = (ImageView) findViewById(R.id.iv_movie_poster);
-        mTitleText = (TextView) findViewById(R.id.tv_movie_title);
-        mReleaseText = (TextView) findViewById(R.id.tv_movie_release_date);
-        mVoteAverageText = (TextView) findViewById(R.id.tv_movie_average_vote);
-        mMovieLanguage = (TextView) findViewById(R.id.tv_movie_language);
-        mPlotText = (TextView) findViewById(R.id.tv_movie_plot);
+        ButterKnife.bind(this);
 
         Intent savedIntent = getIntent();
         if (savedIntent != null && savedIntent.getExtras() != null) {

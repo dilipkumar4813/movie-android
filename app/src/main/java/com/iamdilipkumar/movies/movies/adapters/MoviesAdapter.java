@@ -1,6 +1,7 @@
 package com.iamdilipkumar.movies.movies.adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,11 @@ import com.iamdilipkumar.movies.movies.models.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Optional;
 
 /**
  * Created on 21/03/17.
@@ -39,13 +45,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // Imageview to display the poster
+        @Nullable
+        @BindView(R.id.iv_movie_poster)
         ImageView mPoster;
 
         MovieViewHolder(View itemView) {
             super(itemView);
 
-            mPoster = (ImageView) itemView.findViewById(R.id.ib_movie_poster);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+
         }
 
         /**
@@ -68,10 +77,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     /**
-     *  Method to inflate the layout for the item
-     *  View holders are created as per the number of the count of items
+     * Method to inflate the layout for the item
+     * View holders are created as per the number of the count of items
      *
-     * @param parent ViewHolders are contained within this ViewGroup.
+     * @param parent   ViewHolders are contained within this ViewGroup.
      * @param viewType if recyclerview has different types
      * @return the new view holder
      */
@@ -84,10 +93,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     /**
-     *
      * Method to get reference to the list and load the same
      *
-     * @param holder the MovieViewHolder that has to be updated
+     * @param holder   the MovieViewHolder that has to be updated
      * @param position the position of the item
      */
     @Override
