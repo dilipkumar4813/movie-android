@@ -35,3 +35,4 @@ Download or clone the repository on the your local machine, register in [The mov
 ## Libraries
 
 * [Picasso](http://square.github.io/picasso/)
+* [Butterknife](http://jakewharton.github.io/butterknife/)
