@@ -7,11 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iamdilipkumar.movies.movies.adapters.MoviesAdapter;
 import com.iamdilipkumar.movies.movies.models.Movie;
@@ -27,6 +31,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 
 /**
  * Launcher activity that shows movies in grid layout
@@ -40,11 +45,30 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     @BindView(R.id.pb_loading_data)
     ProgressBar mLoading;
+
     @BindView(R.id.tv_loading_message)
     TextView mErrorText;
 
     @BindView(R.id.rv_movies_list)
     RecyclerView mMoviesList;
+
+    @BindView(R.id.s_sort_options)
+    Spinner mSortSpinner;
+
+    @OnItemSelected(R.id.s_sort_options)
+    void spinnerItemSelected(Spinner spinner, int position) {
+        String sort = spinner.getItemAtPosition(position).toString();
+
+        if (sort.equals(spinner.getItemAtPosition(0))) {
+            setTitle(getString(R.string.spinner_popular));
+            getMoviesList(getString(R.string.sort_popular));
+        } else if (sort.equals(spinner.getItemAtPosition(1))) {
+            setTitle(getString(R.string.spinner_top_rated));
+            getMoviesList(getString(R.string.sort_top_rated));
+        } else {
+            Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     MoviesAdapter mAdapter;
     ArrayList<Movie> mMovies = new ArrayList<>();
@@ -55,11 +79,34 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         setContentView(R.layout.activity_movies_list);
         ButterKnife.bind(this);
 
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        final GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
         mMoviesList.setLayoutManager(mGridLayoutManager);
 
-        setTitle(getString(R.string.action_popular));
-        getMoviesList(getString(R.string.sort_popular));
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSortSpinner.setAdapter(adapter);
+
+        RecyclerView.OnScrollListener recyclerViewScroll = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int totalItemCount = mGridLayoutManager.getItemCount();
+                int lastVisisbleItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
+                if (totalItemCount - 1 == lastVisisbleItemPosition) {
+                    Log.d("dilip", " Total" + totalItemCount + " Last visible position" + lastVisisbleItemPosition);
+                }
+            }
+        };
+
+        mMoviesList.addOnScrollListener(recyclerViewScroll);
+
+        //mMoviesList.setItemAnimator(new SlideIn);
     }
 
     /**
@@ -83,14 +130,6 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_movies_popular:
-                setTitle(getString(R.string.action_popular));
-                getMoviesList(getString(R.string.sort_popular));
-                break;
-            case R.id.action_movies_top:
-                setTitle(getString(R.string.action_top_rated));
-                getMoviesList(getString(R.string.sort_top_rated));
-                break;
             case R.id.action_share:
                 shareText();
                 break;

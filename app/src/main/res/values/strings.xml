@@ -3,8 +3,13 @@
 
     <!--Menu options-->
     <string name="action_share">Share</string>
-    <string name="action_popular">Popular Movies</string>
-    <string name="action_top_rated">Top Rated Movies</string>
+
+    <string name="text_filters">Filters</string>
+
+    <!--Spinner options-->
+    <string name="spinner_popular">Popular</string>
+    <string name="spinner_top_rated">Top Rated</string>
+    <string name="spinner_favourite">Favourites</string>
 
     <string name="sort_popular">popular</string>
     <string name="sort_top_rated">top_rated</string>
@@ -26,4 +31,12 @@
     <string name="mime_type">text/plain</string>
     <string name="share_title">Share movie app</string>
     <string name="share_content">Check out the coolest app to view the most popular and top rated apps</string>
+
+    <string name="spinner_sort_order">Popular</string>
+
+    <string-array name="sort_options">
+        <item>@string/spinner_popular</item>
+        <item>@string/spinner_top_rated</item>
+        <item>@string/spinner_favourite</item>
+    </string-array>
 </resources>
