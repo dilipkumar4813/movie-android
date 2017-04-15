@@ -196,7 +196,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
             mLoading.setVisibility(View.VISIBLE);
         }
 
-        MoviesInterface moviesInterface = NetworkUtils.buildRetrofit(this).create(MoviesInterface.class);
+        MoviesInterface moviesInterface = NetworkUtils.buildRetrofit().create(MoviesInterface.class);
 
         mCompositeDisposable.add(moviesInterface.getMovies(sortOrder, String.valueOf(sCurrentPage))
                 .observeOn(AndroidSchedulers.mainThread())
