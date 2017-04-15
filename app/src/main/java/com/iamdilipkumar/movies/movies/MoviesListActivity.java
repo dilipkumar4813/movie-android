@@ -236,17 +236,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     public void onMovieItemClick(int position) {
         Movie movie = mMovies.get(position);
         Intent movieIntent = new Intent(this, MovieDetailActivity.class);
-
-        /*Bundle movieBundle = new Bundle();
-        movieBundle.putParcelable("movie",movie);*/
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_TITLE, movie.getTitle());
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_PLOT, movie.getOverview());
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_BANNER, movie.getBackdropPath());
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_POSTER, movie.getPosterPath());
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_RELEASE, movie.getReleaseDate());
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_LANGUAGE, movie.getOriginalLanguage());
-        //movieIntent.putExtra("votes", movie.getVoteCount());
-        movieIntent.putExtra(MovieDetailActivity.MOVIE_AVERAGE_RATING, movie.getVoteAverage());
+        movieIntent.putExtra(MovieDetailActivity.PARAMS_MOVIE, movie);
         startActivity(movieIntent);
     }
 

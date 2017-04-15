@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 
-public class Movie {
+public class Movie implements Serializable{
 
     @SerializedName("poster_path")
     @Expose
