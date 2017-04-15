@@ -1,7 +1,7 @@
 package com.iamdilipkumar.movies.movies;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.PersistableBundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,19 +19,18 @@ import android.widget.Toast;
 
 import com.iamdilipkumar.movies.movies.adapters.MoviesAdapter;
 import com.iamdilipkumar.movies.movies.models.Movie;
-import com.iamdilipkumar.movies.movies.utilities.MoviesJsonUtils;
+import com.iamdilipkumar.movies.movies.models.MoviesResult;
+import com.iamdilipkumar.movies.movies.utilities.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Launcher activity that shows movies in grid layout
@@ -58,25 +57,37 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     @OnItemSelected(R.id.s_sort_options)
     void spinnerItemSelected(Spinner spinner, int position) {
         String sort = spinner.getItemAtPosition(position).toString();
+        sCurrentPage = 1;
 
-        if (sort.equals(spinner.getItemAtPosition(0))) {
-            setTitle(getString(R.string.spinner_popular));
-            getMoviesList(getString(R.string.sort_popular));
-        } else if (sort.equals(spinner.getItemAtPosition(1))) {
-            setTitle(getString(R.string.spinner_top_rated));
-            getMoviesList(getString(R.string.sort_top_rated));
-        } else {
-            Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
+        switch (position) {
+            case 0:
+                setTitle(getString(R.string.spinner_popular));
+                getMoviesList(getString(R.string.sort_popular));
+                break;
+            case 1:
+                setTitle(getString(R.string.spinner_top_rated));
+                getMoviesList(getString(R.string.sort_top_rated));
+                break;
+            case 2:
+                Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
+    CompositeDisposable mCompositeDisposable;
+
     MoviesAdapter mAdapter;
     ArrayList<Movie> mMovies = new ArrayList<>();
+
+    private static int sCurrentPage = 1;
+    private static int sTotalPages = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_list);
+
+        mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
         final GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
@@ -96,9 +107,13 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int initialItemCount = mGridLayoutManager.findFirstCompletelyVisibleItemPosition();
                 int totalItemCount = mGridLayoutManager.getItemCount();
-                int lastVisisbleItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
-                if (totalItemCount - 1 == lastVisisbleItemPosition) {
+                int lastVisisbleItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
+                if ((totalItemCount - 1 == lastVisisbleItemPosition) && (initialItemCount > 0)) {
+                    if (sTotalPages >= sCurrentPage) {
+                        getMoviesList(getString(R.string.sort_popular));
+                    }
                     Log.d("dilip", " Total" + totalItemCount + " Last visible position" + lastVisisbleItemPosition);
                 }
             }
@@ -157,6 +172,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
      * Method to hide the error message and show the movies list
      */
     private void showList() {
+        mLoading.setVisibility(View.GONE);
         mErrorText.setVisibility(View.INVISIBLE);
         mMoviesList.setVisibility(View.VISIBLE);
     }
@@ -175,12 +191,40 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
      * @param sortOrder the order in which movies have to be sorted
      */
     private void getMoviesList(String sortOrder) {
-        try {
-            URL url = NetworkUtils.buildUrl(sortOrder);
-            new MoviesQueryTask(this).execute(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        if (sCurrentPage == 1) {
+            doNotShowList();
+            mLoading.setVisibility(View.VISIBLE);
         }
+
+        MoviesInterface moviesInterface = NetworkUtils.buildRetrofit(this).create(MoviesInterface.class);
+
+        mCompositeDisposable.add(moviesInterface.getMovies(sortOrder, String.valueOf(sCurrentPage))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::apiResponse, this::apiError));
+    }
+
+    private void apiResponse(MoviesResult movies) {
+        showList();
+
+        sTotalPages = movies.getTotalPages();
+        sCurrentPage++;
+
+        if (sCurrentPage == 2) {
+            mMovies.clear();
+        }
+
+        for (Movie item : movies.getResults()) {
+            mMovies.add(item);
+            Log.d("test", item.getPosterPath());
+        }
+
+        mAdapter = new MoviesAdapter(mMovies, this);
+        mMoviesList.setAdapter(mAdapter);
+    }
+
+    private void apiError(Throwable error) {
+        Toast.makeText(this, "Error " + error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -192,65 +236,29 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     public void onMovieItemClick(int position) {
         Movie movie = mMovies.get(position);
         Intent movieIntent = new Intent(this, MovieDetailActivity.class);
-        movieIntent.putExtra("title", movie.getMovieTitle());
-        movieIntent.putExtra("plot", movie.getMoviePlot());
-        movieIntent.putExtra("banner", movie.getMovieBanner());
-        movieIntent.putExtra("poster", movie.getMoviePoster());
-        movieIntent.putExtra("release", movie.getMovieRelease());
-        movieIntent.putExtra("language", movie.getMovieLanguage());
-        movieIntent.putExtra("votes", movie.getMovieVoteCount());
-        movieIntent.putExtra("average", movie.getMovieVoteAverage());
+
+        /*Bundle movieBundle = new Bundle();
+        movieBundle.putParcelable("movie",movie);*/
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_TITLE, movie.getTitle());
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_PLOT, movie.getOverview());
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_BANNER, movie.getBackdropPath());
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_POSTER, movie.getPosterPath());
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_RELEASE, movie.getReleaseDate());
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_LANGUAGE, movie.getOriginalLanguage());
+        //movieIntent.putExtra("votes", movie.getVoteCount());
+        movieIntent.putExtra(MovieDetailActivity.MOVIE_AVERAGE_RATING, movie.getVoteAverage());
         startActivity(movieIntent);
     }
 
-    /**
-     * Async task for network connection
-     * TMDB api call {@link NetworkUtils} and parse the json object
-     */
-    private class MoviesQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
 
-        MoviesAdapter.MovieItemClickListener mMovieItemClickListener;
+    }
 
-        MoviesQueryTask(MoviesAdapter.MovieItemClickListener movieItemClickListener) {
-            mMovieItemClickListener = movieItemClickListener;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mErrorText.setVisibility(View.INVISIBLE);
-            mLoading.setVisibility(View.VISIBLE);
-            doNotShowList();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Movie> doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            try {
-                String moviesResults = NetworkUtils.getMoviesListFromHttpUrl(searchUrl);
-                try {
-                    mMovies = MoviesJsonUtils.getMoviesFromJson(moviesResults);
-                    return mMovies;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Movie> movies) {
-            mLoading.setVisibility(View.INVISIBLE);
-
-            if (movies != null) {
-                mAdapter = new MoviesAdapter(movies, mMovieItemClickListener);
-                mMoviesList.setAdapter(mAdapter);
-                showList();
-            } else {
-                mErrorText.setVisibility(View.VISIBLE);
-            }
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
     }
 }

@@ -39,4 +39,6 @@
         <item>@string/spinner_top_rated</item>
         <item>@string/spinner_favourite</item>
     </string-array>
+
+    <string name="movies_api_key"></string>
 </resources>

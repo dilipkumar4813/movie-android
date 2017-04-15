@@ -1,11 +1,15 @@
 package com.iamdilipkumar.movies.movies.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
+
+import java.util.List;
 
 /**
  * Model to hold the data received from the API call
- *
- * Created on 21/03/17.
+ * <p>
+ * Created on 15/04/17.
  *
  * @author dilipkumar4813
  * @version 1.0
@@ -13,91 +17,102 @@ import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
 
 public class Movie {
 
-    private String movieTitle;
-    private String moviePlot;
-    private String moviePoster;
-    private String movieVoteCount;
-    private String movieRelease;
-    private String movieVoteAverage;
-    private String movieLanguage;
-    private String movieBanner;
+    @SerializedName("poster_path")
+    @Expose
+    private String posterPath;
+    @SerializedName("adult")
+    @Expose
+    private Boolean adult;
+    @SerializedName("overview")
+    @Expose
+    private String overview;
+    @SerializedName("release_date")
+    @Expose
+    private String releaseDate;
+    @SerializedName("genre_ids")
+    @Expose
+    private List<Integer> genreIds = null;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("original_title")
+    @Expose
+    private String originalTitle;
+    @SerializedName("original_language")
+    @Expose
+    private String originalLanguage;
+    @SerializedName("title")
+    @Expose
+    private String title;
+    @SerializedName("backdrop_path")
+    @Expose
+    private String backdropPath;
+    @SerializedName("popularity")
+    @Expose
+    private Double popularity;
+    @SerializedName("vote_count")
+    @Expose
+    private Integer voteCount;
+    @SerializedName("video")
+    @Expose
+    private Boolean video;
+    @SerializedName("vote_average")
+    @Expose
+    private Double voteAverage;
 
-    /**
-     * Constructor to initialize the Movie class for referencing in adapter and activity
-     *
-     * @param movieTitle       store the title of the movie
-     * @param moviePlot        store the plot of the movie
-     * @param moviePoster      store the url for the poster
-     * @param movieVoteCount   store the vote count of the movie
-     * @param movieRelease     store the release date of the movie
-     * @param movieVoteAverage store the average voting for the movie
-     * @param movieLanguage    store the original lanugage of them movie
-     * @param movieBanner      store the banner url of the movie
-     */
-    public Movie(String movieTitle, String moviePlot, String moviePoster, String movieVoteCount, String movieRelease, String movieVoteAverage, String movieLanguage, String movieBanner) {
-        this.movieTitle = movieTitle;
-        this.moviePlot = moviePlot;
-        this.moviePoster = NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_POSTER_SIZE + moviePoster;
-        this.movieVoteCount = movieVoteCount;
-        this.movieRelease = movieRelease;
-        this.movieVoteAverage = movieVoteAverage;
-        this.movieLanguage = movieLanguage;
-        this.movieBanner = NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_BANNER_SIZE + movieBanner;
+    public String getPosterPath() {
+        return NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_POSTER_SIZE + posterPath;
     }
 
-    /**
-     * @return the title of the movie in string format
-     */
-    public String getMovieTitle() {
-        return movieTitle;
+    public Boolean getAdult() {
+        return adult;
     }
 
-    /**
-     * @return the movie plot in string format
-     */
-    public String getMoviePlot() {
-        return moviePlot;
+    public String getOverview() {
+        return overview;
     }
 
-    /**
-     * @return return the poster url in string format
-     */
-    public String getMoviePoster() {
-        return moviePoster;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    /**
-     * @return the movie vote count in string format
-     */
-    public String getMovieVoteCount() {
-        return movieVoteCount;
+    public List<Integer> getGenreIds() {
+        return genreIds;
     }
 
-    /**
-     * @return the movie release date in string format
-     */
-    public String getMovieRelease() {
-        return movieRelease;
+    public Integer getId() {
+        return id;
     }
 
-    /**
-     * @return the average vote rate of the movie in string format
-     */
-    public String getMovieVoteAverage() {
-        return movieVoteAverage;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    /**
-     * @return the original lanugage of the movie in string format
-     */
-    public String getMovieLanguage() {
-        return movieLanguage;
+    public String getOriginalLanguage() {
+        return originalLanguage;
     }
 
-    /**
-     * @return the movie banner url in string format
-     */
-    public String getMovieBanner() {
-        return movieBanner;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getBackdropPath() {
+        return NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_BANNER_SIZE + backdropPath;
+    }
+
+    public Double getPopularity() {
+        return popularity;
+    }
+
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public Boolean getVideo() {
+        return video;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 }

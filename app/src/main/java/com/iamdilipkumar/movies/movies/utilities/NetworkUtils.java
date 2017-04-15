@@ -1,12 +1,20 @@
 package com.iamdilipkumar.movies.movies.utilities;
 
-import android.net.Uri;
+import android.content.Context;
+
+import com.iamdilipkumar.movies.movies.BuildConfig;
+import com.iamdilipkumar.movies.movies.R;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
+
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created on 20/03/17.
@@ -29,50 +37,46 @@ public class NetworkUtils {
 
     private final static String PARAM_API = "api_key";
 
-    // Add the movie API key for TMDB
-    private final static String API_KEY = "";
+    protected final static String MOVIES_PAGE = "page";
 
     /**
-     *  Builds the url with the sort order and api key
      *
-     * @param sortingOrder string that specifies the sort order
-     * @return URL returns the built URL
-     * @throws MalformedURLException Related to malformed URL
+     * @param context - used to access the strings, to fetch API key
+     * @return Retrofit - used for building API calls
      */
-    public static URL buildUrl(String sortingOrder) throws MalformedURLException {
-        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL+sortingOrder).buildUpon()
-                .appendQueryParameter(PARAM_API, API_KEY)
-                .build();
+    public static Retrofit buildRetrofit(final Context context){
+        OkHttpClient.Builder httpClient =
+                new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
 
-        return new URL(builtUri.toString());
-    }
+                HttpUrl url = originalHttpUrl.newBuilder()
+                        .addQueryParameter(PARAM_API, context.getString(R.string.movies_api_key))
+                        .build();
 
-    /**
-     * Fetch data from the url provided
-     *
-     * @param url The url from which the data has to be
-     * @return String response from the url
-     * @throws IOException Related to network and stream reading
-     */
-    public static String getMoviesListFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                Request.Builder requestBuilder = original.newBuilder()
+                        .url(url);
 
-        try {
-            InputStream in = connection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasResults = scanner.hasNext();
-
-            if (hasResults) {
-                return scanner.next();
-            } else {
-                return null;
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
             }
-        } finally {
-            connection.disconnect();
+        });
+
+        if(BuildConfig.DEBUG) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            httpClient.addInterceptor(loggingInterceptor);
         }
+
+        return new Retrofit.Builder()
+                .baseUrl(MOVIEDB_BASE_URL)
+                .client(httpClient.build())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 
 }

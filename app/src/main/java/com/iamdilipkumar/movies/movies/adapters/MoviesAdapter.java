@@ -16,8 +16,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Optional;
 
 /**
  * Created on 21/03/17.
@@ -64,6 +62,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
          * @param movieTitle setting the title as content description
          */
         void bind(String url, String movieTitle) {
+            assert mPoster != null;
             mPoster.setContentDescription(movieTitle);
 
             Picasso.with(context).load(url).into(mPoster);
@@ -101,7 +100,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         Movie movie = movies.get(position);
-        holder.bind(movie.getMoviePoster(), movie.getMovieTitle());
+        holder.bind(movie.getPosterPath(), movie.getTitle());
     }
 
     /**
