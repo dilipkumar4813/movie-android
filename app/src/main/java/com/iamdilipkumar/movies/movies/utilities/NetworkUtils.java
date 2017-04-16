@@ -12,12 +12,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * This utility class will be used to connect with the movies api
  * Fetch the results based on sort order
- *
+ * <p>
  * Created on 20/03/17.
  *
  * @author dilipkumar4813
  * @version 1.0
- *
  */
 
 public class NetworkUtils {
@@ -29,6 +28,8 @@ public class NetworkUtils {
     public final static String MOVIE_POSTER_SIZE = "w185";
 
     public final static String MOVIE_BANNER_SIZE = "w500";
+
+    public final static String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
 
     final static String MOVIES_PAGE = "page";
 

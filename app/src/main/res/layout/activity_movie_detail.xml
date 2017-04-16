@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="movie"
             type="com.iamdilipkumar.movies.movies.models.Movie" />
@@ -12,7 +11,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
         tools:context="com.iamdilipkumar.movies.movies.MovieDetailActivity">
 
         <LinearLayout
@@ -63,7 +61,7 @@
                         android:fontFamily="monospace"
                         android:text="@{movie.title}"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorSecondaryText"
                         tools:text="@string/movie_title" />
 
                     <TextView
@@ -73,7 +71,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="monospace"
                         android:text="@{movie.releaseDate}"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorSecondaryText"
                         android:textSize="12sp"
                         tools:text="@string/movie_release" />
 
@@ -84,7 +82,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="monospace"
                         android:text="@{@string/movie_average_vote+Double.toString(movie.voteAverage)}"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorSecondaryText"
                         android:textSize="12sp"
                         tools:text="@string/movie_average_vote" />
 
@@ -95,7 +93,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="monospace"
                         android:text="@{@string/movie_language+movie.originalLanguage}"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorSecondaryText"
                         android:textSize="12sp"
                         tools:text="@string/movie_language" />
 
@@ -109,7 +107,7 @@
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="5dp"
-                android:background="@android:color/white" />
+                android:background="@color/colorDivider" />
 
             <TextView
                 android:id="@+id/tv_movie_plot"
@@ -120,7 +118,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingBottom="16dp"
                 android:text="@{movie.overview}"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorSecondaryText"
                 tools:text="@string/movie_plot" />
 
             <View
@@ -129,7 +127,7 @@
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="5dp"
-                android:background="@android:color/white" />
+                android:background="@color/colorDivider" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -137,9 +135,20 @@
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="5dp"
-                android:paddingBottom="16dp"
+                android:paddingBottom="5dp"
                 android:text="@string/title_trailers"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/colorSecondaryText"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_start_and_end"
+                android:layout_marginLeft="@dimen/margin_start_and_end"
+                android:layout_marginRight="@dimen/margin_start_and_end"
+                android:layout_marginStart="@dimen/margin_start_and_end"
+                android:scrollbars="none" />
 
             <View
                 android:layout_width="match_parent"
@@ -147,7 +156,7 @@
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="5dp"
-                android:background="@android:color/white" />
+                android:background="@color/colorDivider" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -155,9 +164,19 @@
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="5dp"
-                android:paddingBottom="16dp"
                 android:text="@string/title_reviews"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/colorSecondaryText"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_start_and_end"
+                android:layout_marginLeft="@dimen/margin_start_and_end"
+                android:layout_marginRight="@dimen/margin_start_and_end"
+                android:layout_marginStart="@dimen/margin_start_and_end"
+                android:scrollbars="none" />
         </LinearLayout>
 
     </ScrollView>

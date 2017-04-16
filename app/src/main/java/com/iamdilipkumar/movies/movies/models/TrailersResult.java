@@ -1,8 +1,9 @@
 package com.iamdilipkumar.movies.movies.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Created on 16/04/17.

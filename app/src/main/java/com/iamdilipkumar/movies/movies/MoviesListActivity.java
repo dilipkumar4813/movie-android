@@ -1,10 +1,10 @@
 package com.iamdilipkumar.movies.movies;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -90,7 +90,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
-        final GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
         mMoviesList.setLayoutManager(mGridLayoutManager);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

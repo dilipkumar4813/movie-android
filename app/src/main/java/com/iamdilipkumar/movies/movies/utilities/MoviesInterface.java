@@ -2,6 +2,7 @@ package com.iamdilipkumar.movies.movies.utilities;
 
 import com.iamdilipkumar.movies.movies.models.MoviesResult;
 import com.iamdilipkumar.movies.movies.models.ReviewsResult;
+import com.iamdilipkumar.movies.movies.models.TrailersResult;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -20,6 +21,9 @@ public interface MoviesInterface {
     @GET("{directory}")
     Observable<MoviesResult> getMovies(@Path("directory") String directory, @Query(NetworkUtils.MOVIES_PAGE) String pageNo);
 
-    @GET("{movie_id}/{directory}")
-    Observable<ReviewsResult> getMovieInfo(@Path("movie_id") String movieId, @Path("directory") String directory);
+    @GET("{movie_id}/reviews")
+    Observable<ReviewsResult> getReviews(@Path("movie_id") String movieId);
+
+    @GET("{movie_id}/videos")
+    Observable<TrailersResult> getTrailers(@Path("movie_id") String movieId);
 }
