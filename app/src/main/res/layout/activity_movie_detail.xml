@@ -105,7 +105,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/divider_height"
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="5dp"
@@ -123,6 +123,41 @@
                 android:textColor="@android:color/white"
                 tools:text="@string/movie_plot" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginLeft="@dimen/margin_start_and_end"
+                android:layout_marginRight="@dimen/margin_start_and_end"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_start_and_end"
+                android:layout_marginRight="@dimen/margin_start_and_end"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="16dp"
+                android:text="@string/title_trailers"
+                android:textColor="@android:color/white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginLeft="@dimen/margin_start_and_end"
+                android:layout_marginRight="@dimen/margin_start_and_end"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_start_and_end"
+                android:layout_marginRight="@dimen/margin_start_and_end"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="16dp"
+                android:text="@string/title_reviews"
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
     </ScrollView>
