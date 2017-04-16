@@ -9,7 +9,8 @@ import java.util.List;
 
 /**
  * Model to hold the data received from the API call
- * <p>
+ * for individual movie item
+ *
  * Created on 15/04/17.
  *
  * @author dilipkumar4813
@@ -21,42 +22,55 @@ public class Movie implements Serializable{
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
+
     @SerializedName("adult")
     @Expose
     private Boolean adult;
+
     @SerializedName("overview")
     @Expose
     private String overview;
+
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+
     @SerializedName("genre_ids")
     @Expose
     private List<Integer> genreIds = null;
+
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("original_title")
     @Expose
     private String originalTitle;
+
     @SerializedName("original_language")
     @Expose
     private String originalLanguage;
+
     @SerializedName("title")
     @Expose
     private String title;
+
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
+
     @SerializedName("popularity")
     @Expose
     private Double popularity;
+
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
+
     @SerializedName("video")
     @Expose
     private Boolean video;
+
     @SerializedName("vote_average")
     @Expose
     private Double voteAverage;

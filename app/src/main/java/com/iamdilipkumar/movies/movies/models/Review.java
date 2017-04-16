@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Model to hold the data received from the API call
+ * for individual review item
+ *
  * Created on 15/04/17.
  *
  * @author dilipkumar4813
@@ -15,12 +18,15 @@ public class Review {
     @SerializedName("id")
     @Expose
     private String id;
+
     @SerializedName("author")
     @Expose
     private String author;
+
     @SerializedName("content")
     @Expose
     private String content;
+
     @SerializedName("url")
     @Expose
     private String url;
