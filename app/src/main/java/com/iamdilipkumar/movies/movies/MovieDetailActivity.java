@@ -96,6 +96,15 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         }
     }
 
+    /**
+     * Method to call the API by passing the ID of the movie
+     * Fetch trailers and reviews using retrofit 2 and rxjava 2
+     * {@link NetworkUtils#buildRetrofit()} used to build the retrofit object
+     * {@link MoviesInterface#getTrailers(String)} Interface for trailers
+     * {@link MoviesInterface#getReviews(String)} Interface for reviews
+     *
+     * @param movieId - Used to uniquely identify the trailers and reviews
+     */
     private void loadTrailersAndReviews(String movieId) {
 
         MoviesInterface moviesInterface = NetworkUtils.buildRetrofit().create(MoviesInterface.class);
@@ -111,6 +120,12 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
                 .subscribe(this::responseReviews, this::responseError));
     }
 
+    /**
+     * Method to parse the returned JSON file and set the
+     * adapter for the recycler view and populate the same
+     *
+     * @param result - Fetch the trailers
+     */
     private void responseTrailers(TrailersResult result) {
         mTrailers = result.getResults();
         mTrailersAdapter = new TrailersAdapter(mTrailers, this);
@@ -118,6 +133,12 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         mTrailersAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method to parse the returned JSON file and set the
+     * adapter for the recycler view and populate the same
+     *
+     * @param result - pass for populating the recyclerview
+     */
     private void responseReviews(ReviewsResult result) {
         mReviews = result.getResults();
 
@@ -126,6 +147,12 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         mReviewsAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method to handle the response error response
+     * during API calls
+     *
+     * @param error - Used to fetch and handle the error
+     */
     private void responseError(Throwable error) {
 
     }
@@ -136,6 +163,13 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         mCompositeDisposable.clear();
     }
 
+    /**
+     * Method to fetch the position of the trailer item
+     * Using which the trailer information is extracted
+     * and used for calling the intent for loading the video
+     *
+     * @param position - integer to get position of Trailers list
+     */
     @Override
     public void onTrailerClick(int position) {
         Trailer trailer = mTrailers.get(position);
