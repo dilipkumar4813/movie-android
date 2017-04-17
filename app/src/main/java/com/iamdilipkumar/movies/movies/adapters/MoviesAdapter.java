@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.iamdilipkumar.movies.movies.R;
 import com.iamdilipkumar.movies.movies.models.Movie;
@@ -24,12 +25,15 @@ import butterknife.ButterKnife;
  * @version 1.0
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
 
     private ArrayList<Movie> movies;
     private MovieItemClickListener mOnClickListener;
+
+    private final static int ITEM_TYPE_MOVIE = 1;
+    public final static int ITEM_TYPE_LOADING = 0;
 
     public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener) {
         this.movies = moviesResult;
@@ -40,6 +44,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         void onMovieItemClick(int position);
     }
 
+    /**
+     * View holder class for movies type
+     */
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // Imageview to display the poster
@@ -61,7 +68,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
          * @param url        the poster that has to be loaded
          * @param movieTitle setting the title as content description
          */
-        void bind(String url, String movieTitle) {
+        void onBind(String url, String movieTitle) {
             assert mPoster != null;
             mPoster.setContentDescription(movieTitle);
 
@@ -76,6 +83,25 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     /**
+     * Loading view holder class
+     */
+    class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        @Nullable
+        @BindView(R.id.pb_loading_movies)
+        ProgressBar mProgressBar;
+
+        LoadingViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        void onBind() {
+            //assert mProgressBar != null;
+            //mProgressBar.setIndeterminate(true);
+        }
+    }
+
+    /**
      * Method to inflate the layout for the item
      * View holders are created as per the number of the count of items
      *
@@ -84,11 +110,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
      * @return the new view holder
      */
     @Override
-    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.movie_list_item, parent, false);
 
-        return new MovieViewHolder(view);
+        switch (viewType) {
+            case ITEM_TYPE_MOVIE:
+                View movieView = LayoutInflater.from(context).inflate(R.layout.movie_list_item, parent, false);
+                return new MovieViewHolder(movieView);
+            case ITEM_TYPE_LOADING:
+                View loadingView = LayoutInflater.from(context).inflate(R.layout.load_more_list_item, parent, false);
+                return new LoadingViewHolder(loadingView);
+        }
+
+        return null;
     }
 
     /**
@@ -98,9 +132,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
      * @param position the position of the item
      */
     @Override
-    public void onBindViewHolder(MovieViewHolder holder, int position) {
-        Movie movie = movies.get(position);
-        holder.bind(movie.getPosterPath(), movie.getTitle());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof MovieViewHolder) {
+            MovieViewHolder movieViewHolder = (MovieViewHolder) holder;
+            Movie movie = movies.get(position);
+            movieViewHolder.onBind(movie.getPosterPath(), movie.getTitle());
+        } else if (holder instanceof LoadingViewHolder) {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
+            loadingViewHolder.onBind();
+        }
+
     }
 
     /**
@@ -111,5 +153,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return movies.get(position) == null ? ITEM_TYPE_LOADING : ITEM_TYPE_MOVIE;
     }
 }

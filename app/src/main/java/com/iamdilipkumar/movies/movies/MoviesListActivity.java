@@ -22,6 +22,7 @@ import com.iamdilipkumar.movies.movies.models.Movie;
 import com.iamdilipkumar.movies.movies.models.MoviesResult;
 import com.iamdilipkumar.movies.movies.utilities.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
+import com.iamdilipkumar.movies.movies.views.OnInfiniteScrollListener;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
  * @version 1.0
  */
 
-public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener {
+public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, OnInfiniteScrollListener.InfiniteScrollListener {
 
     @BindView(R.id.pb_loading_data)
     ProgressBar mLoading;
@@ -58,6 +59,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     void spinnerItemSelected(Spinner spinner, int position) {
         String sort = spinner.getItemAtPosition(position).toString();
         sCurrentPage = 1;
+        mMovies.clear();
 
         switch (position) {
             case 0:
@@ -78,6 +80,8 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     MoviesAdapter mAdapter;
     ArrayList<Movie> mMovies = new ArrayList<>();
+    private boolean mLoadMore = false;
+    GridLayoutManager mGridLayoutManager;
 
     private static int sCurrentPage = 1;
     private static int sTotalPages = 0;
@@ -90,7 +94,16 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this, 2);
+        mGridLayoutManager = new GridLayoutManager(this, 2);
+        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (mAdapter.getItemViewType(position) == MoviesAdapter.ITEM_TYPE_LOADING) {
+                    return 2;
+                }
+                return 1;
+            }
+        });
         mMoviesList.setLayoutManager(mGridLayoutManager);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -98,30 +111,10 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSortSpinner.setAdapter(adapter);
 
-        RecyclerView.OnScrollListener recyclerViewScroll = new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int initialItemCount = mGridLayoutManager.findFirstCompletelyVisibleItemPosition();
-                int totalItemCount = mGridLayoutManager.getItemCount();
-                int lastVisisbleItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
-                if ((totalItemCount - 1 == lastVisisbleItemPosition) && (initialItemCount > 0)) {
-                    if (sTotalPages >= sCurrentPage) {
-                        getMoviesList(getString(R.string.sort_popular));
-                    }
-                    Log.d("dilip", " Total" + totalItemCount + " Last visible position" + lastVisisbleItemPosition);
-                }
-            }
-        };
-
+        mAdapter = new MoviesAdapter(mMovies, this);
+        mMoviesList.setAdapter(mAdapter);
+        RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this);
         mMoviesList.addOnScrollListener(recyclerViewScroll);
-
-        //mMoviesList.setItemAnimator(new SlideIn);
     }
 
     /**
@@ -185,8 +178,8 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     /**
-     * Method to build the URL and call the API
-     * Constructs the URL (using {@link NetworkUtils})
+     * Method to Connect and retrieve JSON response
+     * Constructs retrofit (using {@link NetworkUtils})
      *
      * @param sortOrder the order in which movies have to be sorted
      */
@@ -204,27 +197,38 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
                 .subscribe(this::apiResponse, this::apiError));
     }
 
+    /**
+     * Method to read json response and parse the same
+     * by passing the objects to the adapter
+     *
+     * @param movies - Main GSON Object class
+     */
     private void apiResponse(MoviesResult movies) {
         showList();
+        hideLoadingItem();
 
         sTotalPages = movies.getTotalPages();
         sCurrentPage++;
 
-        if (sCurrentPage == 2) {
-            mMovies.clear();
-        }
-
         for (Movie item : movies.getResults()) {
             mMovies.add(item);
-            Log.d("test", item.getPosterPath());
         }
-
-        mAdapter = new MoviesAdapter(mMovies, this);
-        mMoviesList.setAdapter(mAdapter);
+        mLoadMore = true;
+        mAdapter.notifyDataSetChanged();
     }
 
     private void apiError(Throwable error) {
+        hideLoadingItem();
         Toast.makeText(this, "Error " + error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideLoadingItem() {
+        if (mLoadMore) {
+            if (mAdapter.getItemViewType(mMovies.size() - 1) == MoviesAdapter.ITEM_TYPE_LOADING) {
+                mMovies.remove(mMovies.size() - 1);
+                mAdapter.notifyItemRemoved(mMovies.size());
+            }
+        }
     }
 
     /**
@@ -250,5 +254,22 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();
+    }
+
+    @Override
+    public void loadMoreData() {
+        int initialItemCount = mGridLayoutManager.findFirstCompletelyVisibleItemPosition();
+        int totalItemCount = mGridLayoutManager.getItemCount();
+        int lastVisisbleItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
+
+        if ((mLoadMore) && (totalItemCount - 1 == lastVisisbleItemPosition) && (initialItemCount > 0)) {
+            if (sTotalPages >= sCurrentPage) {
+
+                mMovies.add(null);
+                mAdapter.notifyItemInserted(mMovies.size() - 1);
+                getMoviesList(getString(R.string.sort_popular));
+            }
+            Log.d("dilip", " Total" + totalItemCount + " Last visible position" + lastVisisbleItemPosition);
+        }
     }
 }
