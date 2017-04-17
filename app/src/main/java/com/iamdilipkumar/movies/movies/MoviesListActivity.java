@@ -22,7 +22,7 @@ import com.iamdilipkumar.movies.movies.models.Movie;
 import com.iamdilipkumar.movies.movies.models.MoviesResult;
 import com.iamdilipkumar.movies.movies.utilities.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
-import com.iamdilipkumar.movies.movies.views.OnInfiniteScrollListener;
+import com.iamdilipkumar.movies.movies.views.listeners.OnInfiniteScrollListener;
 import com.iamdilipkumar.movies.movies.views.listeners.InfiniteScrollListener;
 
 import java.util.ArrayList;

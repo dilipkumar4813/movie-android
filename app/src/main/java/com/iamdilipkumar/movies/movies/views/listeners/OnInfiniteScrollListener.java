@@ -1,9 +1,7 @@
-package com.iamdilipkumar.movies.movies.views;
+package com.iamdilipkumar.movies.movies.views.listeners;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import com.iamdilipkumar.movies.movies.views.listeners.InfiniteScrollListener;
 
 /**
  * Created on 17/04/17.
