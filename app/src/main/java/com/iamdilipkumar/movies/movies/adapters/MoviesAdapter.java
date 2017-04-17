@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -34,6 +36,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private final static int ITEM_TYPE_MOVIE = 1;
     public final static int ITEM_TYPE_LOADING = 0;
+
+    private int lastPosition = -1;
 
     public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener) {
         this.movies = moviesResult;
@@ -138,6 +142,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             MovieViewHolder movieViewHolder = (MovieViewHolder) holder;
             Movie movie = movies.get(position);
             movieViewHolder.onBind(movie.getPosterPath(), movie.getTitle());
+
+            if (position > lastPosition) {
+                Animation animation = null;
+                if(position%2==0){
+                    animation = AnimationUtils.loadAnimation(context,
+                            R.anim.recycler_load_from_below_even);
+                }else{
+                    animation = AnimationUtils.loadAnimation(context,
+                            R.anim.recycler_load_from_below_odd);
+                }
+
+                movieViewHolder.itemView.startAnimation(animation);
+                lastPosition = position;
+            }
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.onBind();

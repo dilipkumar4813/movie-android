@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -114,7 +115,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
         mAdapter = new MoviesAdapter(mMovies, this);
         mMoviesList.setAdapter(mAdapter);
-        RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this,mGridLayoutManager);
+        RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this, mGridLayoutManager);
         mMoviesList.addOnScrollListener(recyclerViewScroll);
     }
 
@@ -225,7 +226,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     private void hideLoadingItem() {
         if (mLoadMore) {
-            if (mAdapter.getItemViewType(mMovies.size() - 1) == MoviesAdapter.ITEM_TYPE_LOADING) {
+            if ((mAdapter.getItemViewType(mMovies.size() - 1) == MoviesAdapter.ITEM_TYPE_LOADING) && (mMovies.size() > 0)) {
                 mMovies.remove(mMovies.size() - 1);
                 mAdapter.notifyItemRemoved(mMovies.size());
             }
