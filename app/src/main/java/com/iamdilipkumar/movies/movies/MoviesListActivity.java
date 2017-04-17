@@ -23,6 +23,7 @@ import com.iamdilipkumar.movies.movies.models.MoviesResult;
 import com.iamdilipkumar.movies.movies.utilities.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
 import com.iamdilipkumar.movies.movies.views.OnInfiniteScrollListener;
+import com.iamdilipkumar.movies.movies.views.listeners.InfiniteScrollListener;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ import io.reactivex.schedulers.Schedulers;
  * @version 1.0
  */
 
-public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, OnInfiniteScrollListener.InfiniteScrollListener {
+public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, InfiniteScrollListener {
 
     @BindView(R.id.pb_loading_data)
     ProgressBar mLoading;
@@ -113,7 +114,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
         mAdapter = new MoviesAdapter(mMovies, this);
         mMoviesList.setAdapter(mAdapter);
-        RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this);
+        RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this,mGridLayoutManager);
         mMoviesList.addOnScrollListener(recyclerViewScroll);
     }
 
@@ -257,19 +258,15 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     @Override
-    public void loadMoreData() {
-        int initialItemCount = mGridLayoutManager.findFirstCompletelyVisibleItemPosition();
-        int totalItemCount = mGridLayoutManager.getItemCount();
-        int lastVisisbleItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
-
-        if ((mLoadMore) && (totalItemCount - 1 == lastVisisbleItemPosition) && (initialItemCount > 0)) {
+    public void loadMoreData(int initialItem, int totalItems, int visibleItem) {
+        if ((mLoadMore) && (totalItems - 1 == visibleItem) && (initialItem > 0)) {
             if (sTotalPages >= sCurrentPage) {
 
                 mMovies.add(null);
                 mAdapter.notifyItemInserted(mMovies.size() - 1);
                 getMoviesList(getString(R.string.sort_popular));
             }
-            Log.d("dilip", " Total" + totalItemCount + " Last visible position" + lastVisisbleItemPosition);
+            Log.d("dilip", " Total" + totalItems + " Last visible position" + visibleItem);
         }
     }
 }
