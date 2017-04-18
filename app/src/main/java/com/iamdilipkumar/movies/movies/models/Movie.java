@@ -2,7 +2,7 @@ package com.iamdilipkumar.movies.movies.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
+import com.iamdilipkumar.movies.movies.utilities.network.NetworkUtils;
 
 import java.io.Serializable;
 import java.util.List;

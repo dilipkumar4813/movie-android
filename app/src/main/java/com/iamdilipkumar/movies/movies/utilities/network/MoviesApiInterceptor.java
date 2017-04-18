@@ -1,4 +1,4 @@
-package com.iamdilipkumar.movies.movies.utilities;
+package com.iamdilipkumar.movies.movies.utilities.network;
 
 import java.io.IOException;
 

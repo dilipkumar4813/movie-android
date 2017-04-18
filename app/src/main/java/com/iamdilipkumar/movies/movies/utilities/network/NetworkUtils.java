@@ -1,4 +1,4 @@
-package com.iamdilipkumar.movies.movies.utilities;
+package com.iamdilipkumar.movies.movies.utilities.network;
 
 import com.iamdilipkumar.movies.movies.BuildConfig;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;

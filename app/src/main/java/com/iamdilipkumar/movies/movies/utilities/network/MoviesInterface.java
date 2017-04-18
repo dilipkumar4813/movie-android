@@ -1,4 +1,4 @@
-package com.iamdilipkumar.movies.movies.utilities;
+package com.iamdilipkumar.movies.movies.utilities.network;
 
 import com.iamdilipkumar.movies.movies.models.MoviesResult;
 import com.iamdilipkumar.movies.movies.models.ReviewsResult;

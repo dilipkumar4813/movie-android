@@ -18,8 +18,8 @@ import com.iamdilipkumar.movies.movies.models.Review;
 import com.iamdilipkumar.movies.movies.models.ReviewsResult;
 import com.iamdilipkumar.movies.movies.models.Trailer;
 import com.iamdilipkumar.movies.movies.models.TrailersResult;
-import com.iamdilipkumar.movies.movies.utilities.MoviesInterface;
-import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
+import com.iamdilipkumar.movies.movies.utilities.network.MoviesInterface;
+import com.iamdilipkumar.movies.movies.utilities.network.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
