@@ -21,6 +21,7 @@ import com.iamdilipkumar.movies.movies.models.Movie;
 import com.iamdilipkumar.movies.movies.models.MoviesResult;
 import com.iamdilipkumar.movies.movies.utilities.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.NetworkUtils;
+import com.iamdilipkumar.movies.movies.utilities.ShareUtils;
 import com.iamdilipkumar.movies.movies.views.listeners.OnInfiniteScrollListener;
 import com.iamdilipkumar.movies.movies.views.listeners.InfiniteScrollListener;
 
@@ -87,11 +88,11 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     CompositeDisposable mCompositeDisposable;
 
-    MoviesAdapter mAdapter;
-    ArrayList<Movie> mMovies = new ArrayList<>();
+    private MoviesAdapter mAdapter;
+    private ArrayList<Movie> mMovies = new ArrayList<>();
     private boolean mLoadMore = false;
     GridLayoutManager mGridLayoutManager;
-    String mSortOrder;
+    private String mSortOrder;
 
     private static int sCurrentPage = 1;
     private static int sTotalPages = 0;
@@ -149,26 +150,11 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                shareText();
+                ShareUtils.shareApp(this);
                 break;
         }
 
         return true;
-    }
-
-    /**
-     * Method to share the data over various app installed on the device
-     */
-    private void shareText() {
-        String mimeType = getString(R.string.mime_type);
-        String title = getString(R.string.share_title);
-        String textToShare = getString(R.string.share_content);
-        ShareCompat.IntentBuilder
-                .from(this)
-                .setType(mimeType)
-                .setChooserTitle(title)
-                .setText(textToShare)
-                .startChooser();
     }
 
     /**
