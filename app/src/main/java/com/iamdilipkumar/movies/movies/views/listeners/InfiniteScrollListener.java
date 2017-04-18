@@ -8,5 +8,5 @@ package com.iamdilipkumar.movies.movies.views.listeners;
  */
 
 public interface InfiniteScrollListener {
-    void loadMoreData(int initialItem, int totalItems, int visibleItem);
+    void loadMoreData();
 }

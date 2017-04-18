@@ -144,11 +144,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             movieViewHolder.onBind(movie.getPosterPath(), movie.getTitle());
 
             if (position > lastPosition) {
-                Animation animation = null;
-                if(position%2==0){
+                Animation animation;
+                if (position % 2 == 0) {
                     animation = AnimationUtils.loadAnimation(context,
                             R.anim.recycler_load_from_below_even);
-                }else{
+                } else {
                     animation = AnimationUtils.loadAnimation(context,
                             R.anim.recycler_load_from_below_odd);
                 }

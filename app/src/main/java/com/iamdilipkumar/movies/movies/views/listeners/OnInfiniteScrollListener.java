@@ -32,6 +32,8 @@ public class OnInfiniteScrollListener extends RecyclerView.OnScrollListener {
         int totalItemCount = mGridLayoutManager.getItemCount();
         int lastVisisbleItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
 
-        mInfiniteScrollListener.loadMoreData(initialItemCount, totalItemCount, lastVisisbleItemPosition);
+        if((totalItemCount - 1 == lastVisisbleItemPosition) && (initialItemCount > 0)){
+            mInfiniteScrollListener.loadMoreData();
+        }
     }
 }

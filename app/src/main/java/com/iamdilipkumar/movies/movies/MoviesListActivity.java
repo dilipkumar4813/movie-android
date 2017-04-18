@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +26,7 @@ import com.iamdilipkumar.movies.movies.views.listeners.InfiniteScrollListener;
 
 import java.util.ArrayList;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
@@ -57,6 +56,12 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     @BindView(R.id.s_sort_options)
     Spinner mSortSpinner;
 
+    @BindString(R.string.sort_popular)
+    String sortPopular;
+
+    @BindString(R.string.sort_top_rated)
+    String sortTopRated;
+
     @OnItemSelected(R.id.s_sort_options)
     void spinnerItemSelected(Spinner spinner, int position) {
         String sort = spinner.getItemAtPosition(position).toString();
@@ -65,12 +70,14 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
         switch (position) {
             case 0:
-                setTitle(getString(R.string.spinner_popular));
-                getMoviesList(getString(R.string.sort_popular));
+                setTitle(sortPopular);
+                mSortOrder = sortPopular;
+                getMoviesList(sortPopular);
                 break;
             case 1:
-                setTitle(getString(R.string.spinner_top_rated));
-                getMoviesList(getString(R.string.sort_top_rated));
+                setTitle(sortTopRated);
+                mSortOrder = sortTopRated;
+                getMoviesList(sortTopRated);
                 break;
             case 2:
                 Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
@@ -84,6 +91,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     ArrayList<Movie> mMovies = new ArrayList<>();
     private boolean mLoadMore = false;
     GridLayoutManager mGridLayoutManager;
+    String mSortOrder;
 
     private static int sCurrentPage = 1;
     private static int sTotalPages = 0;
@@ -211,12 +219,9 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
         sTotalPages = movies.getTotalPages();
         sCurrentPage++;
-
-        for (Movie item : movies.getResults()) {
-            mMovies.add(item);
-        }
-        mLoadMore = true;
+        mMovies.addAll(movies.getResults());
         mAdapter.notifyDataSetChanged();
+        mLoadMore = true;
     }
 
     private void apiError(Throwable error) {
@@ -225,10 +230,10 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     private void hideLoadingItem() {
-        if (mLoadMore) {
-            if ((mAdapter.getItemViewType(mMovies.size() - 1) == MoviesAdapter.ITEM_TYPE_LOADING) && (mMovies.size() > 0)) {
+        if (mMovies.size() > 0) {
+            if (mAdapter.getItemViewType(mMovies.size() - 1) == MoviesAdapter.ITEM_TYPE_LOADING) {
                 mMovies.remove(mMovies.size() - 1);
-                mAdapter.notifyItemRemoved(mMovies.size());
+                mAdapter.notifyItemRemoved(mMovies.size() - 1);
             }
         }
     }
@@ -259,15 +264,14 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     @Override
-    public void loadMoreData(int initialItem, int totalItems, int visibleItem) {
-        if ((mLoadMore) && (totalItems - 1 == visibleItem) && (initialItem > 0)) {
-            if (sTotalPages >= sCurrentPage) {
-
-                mMovies.add(null);
-                mAdapter.notifyItemInserted(mMovies.size() - 1);
-                getMoviesList(getString(R.string.sort_popular));
-            }
-            Log.d("dilip", " Total" + totalItems + " Last visible position" + visibleItem);
+    public void loadMoreData() {
+        if (mLoadMore && (sTotalPages >= sCurrentPage)) {
+            mLoadMore = false;
+            mMovies.add(null);
+            mAdapter.notifyItemInserted(mMovies.size() - 1);
+            getMoviesList(mSortOrder);
+        } else {
+            mLoadMore = false;
         }
     }
 }
