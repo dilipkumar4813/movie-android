@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -12,15 +13,21 @@
         android:contentDescription="@string/app_name"
         android:scaleType="fitStart" />
 
-    <ImageView
-        android:id="@+id/iv_like"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:clickable="true"
-        android:contentDescription="@string/like_description"
-        android:padding="10dp"
-        android:src="@drawable/ic_heart_stroke" />
+        android:orientation="horizontal"
+        android:background="@color/colorAccent">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/iv_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@string/like_description"
+            android:padding="5dp"
+            android:src="@drawable/ic_heart_stroke" />
+    </LinearLayout>
+
+
+</LinearLayout>

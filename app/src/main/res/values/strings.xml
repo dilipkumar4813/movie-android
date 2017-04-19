@@ -25,7 +25,7 @@
 
     <string name="movie_title">Title</string>
     <string name="movie_release">Release date</string>
-    <string name="movie_plot">Movie plot</string>
+    <string name="movie_plot">Plot</string>
 
     <string name="title_trailers">Trailers</string>
     <string name="title_reviews">Reviews</string>
@@ -43,4 +43,10 @@
         <item>@string/spinner_top_rated</item>
         <item>@string/spinner_favourite</item>
     </string-array>
+
+    <string name="loading_text">Loading cool stuff</string>
+    <string name="description_empty">No Description available</string>
+    <string name="trailers_list_empty">No Trailers available at the moment</string>
+    <string name="reviews_list_empty">No Reviews available at the moment</string>
+    <string name="network_error">Oops! something went wrong</string>
 </resources>

@@ -10,14 +10,14 @@ import java.util.List;
 /**
  * Model to hold the data received from the API call
  * for individual movie item
- *
+ * <p>
  * Created on 15/04/17.
  *
  * @author dilipkumar4813
  * @version 1.0
  */
 
-public class Movie implements Serializable{
+public class Movie implements Serializable {
 
     @SerializedName("poster_path")
     @Expose
@@ -85,6 +85,10 @@ public class Movie implements Serializable{
 
     public String getOverview() {
         return overview;
+    }
+
+    public void setOverview(String plot) {
+        overview = plot;
     }
 
     public String getReleaseDate() {

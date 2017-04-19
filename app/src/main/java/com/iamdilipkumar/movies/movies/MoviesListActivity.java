@@ -114,6 +114,8 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
+        /*int column = getResources().getInteger(R.integer.grid_columns);
+        mGridLayoutManager = new GridLayoutManager(this, column);*/
         mGridLayoutManager = new GridLayoutManager(this, 2);
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override

@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.iamdilipkumar.movies.movies.adapters.ReviewsAdapter;
 import com.iamdilipkumar.movies.movies.adapters.TrailersAdapter;
@@ -22,8 +24,10 @@ import com.iamdilipkumar.movies.movies.utilities.network.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.network.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -44,14 +48,26 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     @BindView(R.id.iv_movie_poster)
     ImageView mPosterImage;
 
-    @BindView(R.id.iv_movie_banner)
-    ImageView mBannerImage;
+    @BindView(R.id.tv_trailers_network)
+    TextView mTrailersNetworkText;
 
     @BindView(R.id.rv_trailers)
     RecyclerView mTrailersList;
 
+    @BindView(R.id.tv_reviews_network)
+    TextView mReviewsNetworkText;
+
     @BindView(R.id.rv_reviews)
     RecyclerView mReviewsList;
+
+    @BindString(R.string.trailers_list_empty)
+    String mEmptyTrailers;
+
+    @BindString(R.string.reviews_list_empty)
+    String mEmptyReviews;
+
+    @BindString(R.string.description_empty)
+    String mEmptyDescription;
 
 
     private CompositeDisposable mCompositeDisposable;
@@ -68,6 +84,11 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+
+        if (savedInstanceState != null) {
+            return;
+        }
+
         ActivityMovieDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
 
         mCompositeDisposable = new CompositeDisposable();
@@ -89,8 +110,11 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
 
         Movie movie = (Movie) getIntent().getSerializableExtra("movie");
         if (movie != null) {
-            Picasso.with(this).load(movie.getBackdropPath()).into(mBannerImage);
             Picasso.with(this).load(movie.getPosterPath()).into(mPosterImage);
+
+            if(movie.getOverview().isEmpty()){
+                movie.setOverview(mEmptyDescription);
+            }
             binding.setMovie(movie);
             loadTrailersAndReviews(String.valueOf(movie.getId()));
         }
@@ -127,16 +151,29 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
      * @param result - Fetch the trailers
      */
     private void responseTrailers(TrailersResult result) {
+
+        ArrayList<Trailer> trailersArrayList = new ArrayList<>();
         mTrailers = result.getResults();
 
-        for(Trailer trailer:result.getResults()){
-            if(trailer.getType().equalsIgnoreCase("Trailer")){
-                mTrailers.add(trailer);
+        if (mTrailers.size() > 0) {
+            mTrailersNetworkText.setVisibility(View.GONE);
+
+            for (Trailer trailer : result.getResults()) {
+                if (trailer.getType().equalsIgnoreCase("Trailer")) {
+                    trailersArrayList.add(trailer);
+                }
             }
+
+            mTrailers = trailersArrayList;
+
+            mTrailersAdapter = new TrailersAdapter(mTrailers, this);
+            mTrailersList.setAdapter(mTrailersAdapter);
+            mTrailersAdapter.notifyDataSetChanged();
+        } else {
+            mTrailersNetworkText.setText(mEmptyTrailers);
         }
-        mTrailersAdapter = new TrailersAdapter(mTrailers, this);
-        mTrailersList.setAdapter(mTrailersAdapter);
-        mTrailersAdapter.notifyDataSetChanged();
+
+
     }
 
     /**
@@ -148,9 +185,15 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     private void responseReviews(ReviewsResult result) {
         mReviews = result.getResults();
 
-        mReviewsAdapter = new ReviewsAdapter(mReviews);
-        mReviewsList.setAdapter(mReviewsAdapter);
-        mReviewsAdapter.notifyDataSetChanged();
+        if (mReviews.size() > 0) {
+            mReviewsNetworkText.setVisibility(View.GONE);
+
+            mReviewsAdapter = new ReviewsAdapter(mReviews);
+            mReviewsList.setAdapter(mReviewsAdapter);
+            mReviewsAdapter.notifyDataSetChanged();
+        } else {
+            mReviewsNetworkText.setText(mEmptyReviews);
+        }
     }
 
     /**
@@ -160,7 +203,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
      * @param error - Used to fetch and handle the error
      */
     private void responseError(Throwable error) {
-
+        mTrailersNetworkText.setText(error.getLocalizedMessage());
+        mReviewsNetworkText.setText(error.getLocalizedMessage());
     }
 
     @Override
