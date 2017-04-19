@@ -128,6 +128,12 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
      */
     private void responseTrailers(TrailersResult result) {
         mTrailers = result.getResults();
+
+        for(Trailer trailer:result.getResults()){
+            if(trailer.getType().equalsIgnoreCase("Trailer")){
+                mTrailers.add(trailer);
+            }
+        }
         mTrailersAdapter = new TrailersAdapter(mTrailers, this);
         mTrailersList.setAdapter(mTrailersAdapter);
         mTrailersAdapter.notifyDataSetChanged();

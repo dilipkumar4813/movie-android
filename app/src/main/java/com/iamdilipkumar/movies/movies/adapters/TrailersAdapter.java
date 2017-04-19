@@ -19,7 +19,8 @@ import butterknife.ButterKnife;
 
 /**
  * Class to create an adapter for trailers
- * <p>
+ * Based on the {@link (Trailer)} Model
+ *
  * Created on 16/04/17.
  *
  * @author dilipkumar4813
@@ -58,6 +59,12 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         void onTrailerClick(int position);
     }
 
+    /**
+     * Class to create references for trailers
+     * Create references for the layout items
+     * and handle listeners
+     *
+     */
     class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Nullable
@@ -75,6 +82,12 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Method to bind the trailer name and trailer type
+         *
+         * @param name - Name of the trailer
+         * @param type - Type of trailer
+         */
         private void onBind(String name, String type) {
             Log.d("test", name + " " + type);
 

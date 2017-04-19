@@ -17,6 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * Class to create an adapter for reviews sections
+ * Based on the items from the {@link (Review)} Model
+ *
  * Created on 16/04/17.
  *
  * @author dilipkumar4813
@@ -48,6 +51,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         return mReviews.size();
     }
 
+    /**
+     * Class to create a view holder for review items
+     * and hold references for the same for setting the content
+     *
+     */
     class ReviewsViewHolder extends RecyclerView.ViewHolder {
 
         @Nullable

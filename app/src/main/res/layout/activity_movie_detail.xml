@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="movie"
             type="com.iamdilipkumar.movies.movies.models.Movie" />
@@ -140,6 +141,13 @@
                 android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tv_trailers_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="loading" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_trailers"
                 android:layout_width="match_parent"
@@ -167,6 +175,13 @@
                 android:text="@string/title_reviews"
                 android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_reviews_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="loading" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_reviews"

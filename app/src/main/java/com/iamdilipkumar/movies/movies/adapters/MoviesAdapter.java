@@ -34,24 +34,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private ArrayList<Movie> movies;
     private MovieItemClickListener mOnClickListener;
-    private LikeItemClickListener mLikeItemClickListener;
 
     private final static int ITEM_TYPE_MOVIE = 1;
     public final static int ITEM_TYPE_LOADING = 0;
 
     private int lastPosition = 0;
 
-    public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener, LikeItemClickListener likeItemClickListener) {
+    public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener) {
         this.movies = moviesResult;
         this.mOnClickListener = onClickListener;
-        this.mLikeItemClickListener = likeItemClickListener;
     }
 
     public interface MovieItemClickListener {
         void onMovieItemClick(int position);
-    }
 
-    public interface LikeItemClickListener {
         void onLikeItemClick(int position);
     }
 
@@ -98,8 +94,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            mOnClickListener.onMovieItemClick(clickedPosition);
-            mLikeItemClickListener.onLikeItemClick(clickedPosition);
+            switch (v.getId()) {
+                case R.id.iv_movie_poster:
+                    mOnClickListener.onMovieItemClick(clickedPosition);
+                    break;
+                case R.id.iv_like:
+                    mOnClickListener.onLikeItemClick(clickedPosition);
+                    break;
+            }
         }
     }
 
