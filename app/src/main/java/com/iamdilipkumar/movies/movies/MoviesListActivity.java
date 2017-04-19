@@ -64,24 +64,27 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     @OnItemSelected(R.id.s_sort_options)
     void spinnerItemSelected(Spinner spinner, int position) {
-        String sort = spinner.getItemAtPosition(position).toString();
-        sCurrentPage = 1;
-        mMovies.clear();
+        if (!mFromSavedState) {
+            String sort = spinner.getItemAtPosition(position).toString();
+            sCurrentPage = 1;
+            mMovies.clear();
 
-        switch (position) {
-            case 0:
-                setTitle(sortPopular);
-                mSortOrder = sortPopular;
-                getMoviesList(sortPopular);
-                break;
-            case 1:
-                setTitle(sortTopRated);
-                mSortOrder = sortTopRated;
-                getMoviesList(sortTopRated);
-                break;
-            case 2:
-                Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
-                break;
+            switch (position) {
+                case 0:
+                    setTitle(R.string.spinner_popular);
+                    mSortOrder = sortPopular;
+                    getMoviesList(sortPopular);
+                    break;
+                case 1:
+                    setTitle(R.string.spinner_top_rated);
+                    mSortOrder = sortTopRated;
+                    getMoviesList(sortTopRated);
+                    break;
+                case 2:
+                    setTitle(R.string.spinner_favourite);
+                    Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     }
 
@@ -95,10 +98,17 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     private static int sCurrentPage = 1;
     private static int sTotalPages = 0;
+    private boolean mFromSavedState = false;
+
+    private final static String SPINNER_STATE = "spinner_state";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mFromSavedState = savedInstanceState.getBoolean(SPINNER_STATE);
+        }
         setContentView(R.layout.activity_movies_list);
 
         mCompositeDisposable = new CompositeDisposable();
@@ -149,7 +159,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                ShareUtils.shareApp(this);
+                new ShareUtils().shareApp(this);
                 break;
         }
 
@@ -237,9 +247,19 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onLikeItemClick(int position) {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putBoolean(SPINNER_STATE, true);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override

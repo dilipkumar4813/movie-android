@@ -36,6 +36,7 @@
     <string name="share_content">Check out the coolest app to view the most popular and top rated apps</string>
 
     <string name="spinner_sort_order">Popular</string>
+    <string name="like_description">Like</string>
 
     <string-array name="sort_options">
         <item>@string/spinner_popular</item>

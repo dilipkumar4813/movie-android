@@ -3,6 +3,7 @@ package com.iamdilipkumar.movies.movies.adapters;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final static int ITEM_TYPE_MOVIE = 1;
     public final static int ITEM_TYPE_LOADING = 0;
 
-    private int lastPosition = -1;
+    private int lastPosition = 0;
 
     public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener) {
         this.movies = moviesResult;
@@ -46,6 +47,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface MovieItemClickListener {
         void onMovieItemClick(int position);
+        void onLikeItemClick(int position);
     }
 
     /**
@@ -58,11 +60,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.iv_movie_poster)
         ImageView mPoster;
 
+        @Nullable
+        @BindView(R.id.iv_like)
+        ImageView mLike;
+
         MovieViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
+            mPoster.setOnClickListener(this);
+            mLike.setOnClickListener(this);
 
         }
 
@@ -83,6 +90,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
             mOnClickListener.onMovieItemClick(clickedPosition);
+            mOnClickListener.onLikeItemClick(clickedPosition);
         }
     }
 
@@ -143,7 +151,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Movie movie = movies.get(position);
             movieViewHolder.onBind(movie.getPosterPath(), movie.getTitle());
 
-            if (position > lastPosition) {
+
+            if ((position == movies.size() - 1) || (position == movies.size() - 2)) {
                 Animation animation;
                 if (position % 2 == 0) {
                     animation = AnimationUtils.loadAnimation(context,
@@ -154,8 +163,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
 
                 movieViewHolder.itemView.startAnimation(animation);
-                lastPosition = position;
+                Log.d("test", "" + lastPosition);
             }
+            lastPosition++;
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.onBind();

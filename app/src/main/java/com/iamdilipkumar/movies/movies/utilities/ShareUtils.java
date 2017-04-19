@@ -18,20 +18,20 @@ import butterknife.BindString;
 public class ShareUtils {
 
     @BindString(R.string.mime_type)
-    private static String mMimeType;
+    String mMimeType;
 
     @BindString(R.string.share_title)
-    private static String mShareTitle;
+    String mShareTitle;
 
     @BindString(R.string.share_content)
-    private static String mShareContent;
+    String mShareContent;
 
     /**
      * Method to build the builder for sharing
      *
      * @param activity - The activity in which the share has to be triggered
      */
-    public static void shareApp(Activity activity){
+    public void shareApp(Activity activity){
         ShareCompat.IntentBuilder
                 .from(activity)
                 .setType(mMimeType)
