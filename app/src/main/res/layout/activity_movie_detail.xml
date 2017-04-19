@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="movie"
             type="com.iamdilipkumar.movies.movies.models.Movie" />
@@ -20,16 +19,9 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_movie_title"
-                android:layout_width="match_parent"
+                style="@style/MainTitle"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:fontFamily="sans-serif-condensed"
-                android:padding="16dp"
                 android:text="@{movie.title}"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
                 tools:text="@string/movie_title" />
 
             <LinearLayout
@@ -37,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/short_spacing"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -54,102 +46,70 @@
                     android:id="@+id/ll_info"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="@dimen/short_spacing"
+                    android:layout_marginStart="@dimen/short_spacing"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_movie_release_date"
+                        style="@style/NormalText"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="monospace"
-                        android:text="@{movie.releaseDate}"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="12sp"
+                        android:text="@{@string/movie_release+movie.releaseDate}"
                         tools:text="@string/movie_release" />
 
                     <TextView
-                        android:id="@+id/tv_movie_average_vote"
+                        style="@style/NormalText"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="monospace"
                         android:text="@{@string/movie_average_vote+Double.toString(movie.voteAverage)}"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="12sp"
                         tools:text="@string/movie_average_vote" />
 
                     <TextView
-                        android:id="@+id/tv_movie_language"
+                        style="@style/NormalText"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="monospace"
                         android:text="@{@string/movie_language+movie.originalLanguage}"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="12sp"
                         tools:text="@string/movie_language" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <TextView
+                style="@style/SubTitle"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/short_spacing"
+                android:paddingBottom="@dimen/short_spacing"
+                android:text="@string/movie_plot" />
+
             <View
+                style="@style/Divider"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginLeft="@dimen/margin_start_and_end"
-                android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorDivider" />
+                android:layout_marginTop="@dimen/short_spacing" />
 
             <TextView
+                style="@style/NormalText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="@string/movie_plot"
-                android:textColor="@color/colorSecondaryText"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_movie_plot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_start_and_end"
-                android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="16dp"
+                android:paddingBottom="@dimen/long_padding"
                 android:text="@{movie.overview}"
-                android:textColor="@color/colorSecondaryText"
                 tools:text="@string/movie_plot" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginLeft="@dimen/margin_start_and_end"
-                android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorDivider" />
-
             <TextView
-                android:layout_width="match_parent"
+                style="@style/SubTitle"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_start_and_end"
-                android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="@string/title_trailers"
-                android:textColor="@color/colorSecondaryText"
-                android:textStyle="bold" />
+                android:layout_marginTop="@dimen/short_spacing"
+                android:paddingBottom="@dimen/short_spacing"
+                android:text="@string/title_trailers" />
+
+            <View
+                style="@style/Divider"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/short_spacing" />
 
             <TextView
                 android:id="@+id/tv_trailers_network"
+                style="@style/NormalText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="@string/loading_text" />
 
@@ -163,29 +123,23 @@
                 android:layout_marginStart="@dimen/margin_start_and_end"
                 android:scrollbars="none" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginLeft="@dimen/margin_start_and_end"
-                android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorDivider" />
-
             <TextView
-                android:layout_width="match_parent"
+                style="@style/SubTitle"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_start_and_end"
-                android:layout_marginRight="@dimen/margin_start_and_end"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/margin_start_and_end"
                 android:text="@string/title_reviews"
-                android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold" />
+
+            <View
+                style="@style/Divider"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/short_spacing" />
 
             <TextView
                 android:id="@+id/tv_reviews_network"
+                style="@style/NormalText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/margin_start_and_end"
                 android:gravity="center_horizontal"
                 android:text="@string/loading_text" />
 

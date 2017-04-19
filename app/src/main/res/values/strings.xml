@@ -20,11 +20,11 @@
     <string name="movie_poster">Movie poster</string>
     <string name="movie_banner">Movie banner</string>
 
-    <string name="movie_average_vote">Average rating: </string>
+    <string name="movie_average_vote">Avg rating : </string>
     <string name="movie_language">Language: </string>
 
     <string name="movie_title">Title</string>
-    <string name="movie_release">Release date</string>
+    <string name="movie_release">Release : </string>
     <string name="movie_plot">Plot</string>
 
     <string name="title_trailers">Trailers</string>

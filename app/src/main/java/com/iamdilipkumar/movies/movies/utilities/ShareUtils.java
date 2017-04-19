@@ -1,7 +1,6 @@
 package com.iamdilipkumar.movies.movies.utilities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v4.app.ShareCompat;
 
 import com.iamdilipkumar.movies.movies.R;
