@@ -34,26 +34,31 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private ArrayList<Movie> movies;
     private MovieItemClickListener mOnClickListener;
+    private LikeItemClickListener mLikeItemClickListener;
 
     private final static int ITEM_TYPE_MOVIE = 1;
     public final static int ITEM_TYPE_LOADING = 0;
 
     private int lastPosition = 0;
 
-    public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener) {
+    public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener, LikeItemClickListener likeItemClickListener) {
         this.movies = moviesResult;
         this.mOnClickListener = onClickListener;
+        this.mLikeItemClickListener = likeItemClickListener;
     }
 
     public interface MovieItemClickListener {
         void onMovieItemClick(int position);
+    }
+
+    public interface LikeItemClickListener {
         void onLikeItemClick(int position);
     }
 
     /**
      * View holder class for movies type
      */
-    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // Imageview to display the poster
         @Nullable
@@ -86,11 +91,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Picasso.with(context).load(url).into(mPoster);
         }
 
+        public void onLike() {
+            mLike.setImageResource(R.drawable.ic_heart);
+        }
+
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
             mOnClickListener.onMovieItemClick(clickedPosition);
-            mOnClickListener.onLikeItemClick(clickedPosition);
+            mLikeItemClickListener.onLikeItemClick(clickedPosition);
         }
     }
 

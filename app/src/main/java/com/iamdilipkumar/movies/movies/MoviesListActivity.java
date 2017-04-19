@@ -42,7 +42,7 @@ import io.reactivex.schedulers.Schedulers;
  * @version 1.0
  */
 
-public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, InfiniteScrollListener {
+public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, MoviesAdapter.LikeItemClickListener, InfiniteScrollListener {
 
     @BindView(R.id.pb_loading_data)
     ProgressBar mLoading;
@@ -131,7 +131,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSortSpinner.setAdapter(adapter);
 
-        mAdapter = new MoviesAdapter(mMovies, this);
+        mAdapter = new MoviesAdapter(mMovies, this, this);
         mMoviesList.setAdapter(mAdapter);
         RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this, mGridLayoutManager);
         mMoviesList.addOnScrollListener(recyclerViewScroll);
@@ -248,7 +248,8 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     @Override
     public void onLikeItemClick(int position) {
-
+        MoviesAdapter.MovieViewHolder view = (MoviesAdapter.MovieViewHolder) mMoviesList.findViewHolderForAdapterPosition(position);
+        view.onLike();
     }
 
     @Override
