@@ -6,4 +6,7 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="short_spacing">5dp</dimen>
     <dimen name="long_padding">16dp</dimen>
+    <dimen name="main_title_font_size">28sp</dimen>
+    <dimen name="sub_title_font_size">18sp</dimen>
+    <dimen name="normal_text_font_size">15sp</dimen>
 </resources>

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -75,21 +76,27 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     protected static final String PARAMS_MOVIE = "movie";
 
     private List<Trailer> mTrailers;
-    TrailersAdapter mTrailersAdapter;
+    private TrailersAdapter mTrailersAdapter;
 
-    List<Review> mReviews;
-    ReviewsAdapter mReviewsAdapter;
+    private List<Review> mReviews;
+    private ReviewsAdapter mReviewsAdapter;
+
+    private Movie movie;
+
+    private final static String STATE_TRAILERS = "trailers_state";
+    private final static String STATE_REVIEWS = "reviews_state";
+    private final static String STATE_TRAILERS_LOADED = "trailers_load_state";
+    private final static String STATE_REVIEWS_LOADED = "reviews_load_state";
+
+    private boolean mIsLoadedTrailers = false;
+    private boolean mIsLoadedReviews = false;
+    private ActivityMovieDetailBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-
-        if (savedInstanceState != null) {
-            return;
-        }
-
-        ActivityMovieDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
 
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
@@ -108,15 +115,59 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         mReviewsList.setLayoutManager(layoutManagerReviews);
         mReviewsList.addItemDecoration(dividerItemDecorationReviews);
 
-        Movie movie = (Movie) getIntent().getSerializableExtra("movie");
+        loadData(savedInstanceState);
+    }
+
+    /**
+     * Method to detect the state of the activity
+     * If the activity is loaded for the first time then the intent content is read
+     * Else data is read from the saved instance state
+     *
+     * @param savedInstanceState - Accessing the arraylist and movie object for reload
+     */
+    private void loadData(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            movie = (Movie) savedInstanceState.getSerializable(PARAMS_MOVIE);
+        } else {
+            movie = (Movie) getIntent().getSerializableExtra(PARAMS_MOVIE);
+        }
+
         if (movie != null) {
             Picasso.with(this).load(movie.getPosterPath()).into(mPosterImage);
 
-            if(movie.getOverview().isEmpty()){
+            if (movie.getOverview().isEmpty()) {
                 movie.setOverview(mEmptyDescription);
             }
-            binding.setMovie(movie);
-            loadTrailersAndReviews(String.valueOf(movie.getId()));
+            mBinding.setMovie(movie);
+
+            if (savedInstanceState != null) {
+
+                mIsLoadedTrailers = savedInstanceState.getBoolean(STATE_TRAILERS_LOADED);
+                mIsLoadedReviews = savedInstanceState.getBoolean(STATE_REVIEWS_LOADED);
+
+                if (mIsLoadedTrailers && mIsLoadedReviews) {
+                    mTrailers = savedInstanceState.getParcelableArrayList(STATE_TRAILERS);
+                    mReviews = savedInstanceState.getParcelableArrayList(STATE_REVIEWS);
+
+                    if (mTrailers.size() > 0) {
+                        mTrailersNetworkText.setVisibility(View.GONE);
+
+                        mTrailersAdapter = new TrailersAdapter(mTrailers, this);
+                        mTrailersList.setAdapter(mTrailersAdapter);
+                    }
+
+                    if (mReviews.size() > 0) {
+                        mReviewsNetworkText.setVisibility(View.GONE);
+
+                        mReviewsAdapter = new ReviewsAdapter(mReviews);
+                        mReviewsList.setAdapter(mReviewsAdapter);
+                    }
+                } else {
+                    loadTrailersAndReviews(String.valueOf(movie.getId()));
+                }
+            } else {
+                loadTrailersAndReviews(String.valueOf(movie.getId()));
+            }
         }
     }
 
@@ -173,7 +224,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
             mTrailersNetworkText.setText(mEmptyTrailers);
         }
 
-
+        mIsLoadedTrailers = true;
     }
 
     /**
@@ -194,6 +245,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         } else {
             mReviewsNetworkText.setText(mEmptyReviews);
         }
+
+        mIsLoadedReviews = true;
     }
 
     /**
@@ -227,5 +280,24 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(NetworkUtils.YOUTUBE_BASE_URL + trailer.getKey()));
         startActivity(i);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d("test", "test");
+
+        ArrayList<Trailer> trailersList = new ArrayList<>();
+        trailersList.addAll(mTrailers);
+
+        ArrayList<Review> reviewsList = new ArrayList<>();
+        reviewsList.addAll(mReviews);
+
+        outState.putSerializable(PARAMS_MOVIE, movie);
+        outState.putParcelableArrayList(STATE_TRAILERS, trailersList);
+        outState.putParcelableArrayList(STATE_REVIEWS, reviewsList);
+        outState.putBoolean(STATE_TRAILERS_LOADED, mIsLoadedTrailers);
+        outState.putBoolean(STATE_REVIEWS_LOADED, mIsLoadedReviews);
+
+        super.onSaveInstanceState(outState);
     }
 }

@@ -1,7 +1,12 @@
 package com.iamdilipkumar.movies.movies.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Model to hold the data received from the API call
@@ -13,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
  * @version 1.0
  */
 
-public class Review {
+public class Review implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -45,5 +50,15 @@ public class Review {
 
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
