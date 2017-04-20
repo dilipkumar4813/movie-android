@@ -2,7 +2,6 @@ package com.iamdilipkumar.movies.movies;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -100,14 +99,16 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     private static int sTotalPages = 0;
     private boolean mFromSavedState = false;
 
-    private final static String SPINNER_STATE = "spinner_state";
+    private final static String STATE_SPINNER = "spinner_state";
+    private final static String STATE_LIST = "movies_list_state";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mFromSavedState = savedInstanceState.getBoolean(SPINNER_STATE);
+            //mMovies = savedInstanceState.getParcelableArrayList("movielist");
+            mFromSavedState = savedInstanceState.getBoolean(STATE_SPINNER);
         }
         setContentView(R.layout.activity_movies_list);
 
@@ -116,7 +117,9 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
         /*int column = getResources().getInteger(R.integer.grid_columns);
         mGridLayoutManager = new GridLayoutManager(this, column);*/
+
         mGridLayoutManager = new GridLayoutManager(this, 2);
+
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -260,9 +263,10 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putBoolean(SPINNER_STATE, true);
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(STATE_SPINNER, true);
+        //outState.putParcelableArrayList("movielist",mMovies);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

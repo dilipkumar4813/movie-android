@@ -1,6 +1,7 @@
 package com.iamdilipkumar.movies.movies.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.iamdilipkumar.movies.movies.R;
@@ -17,6 +19,7 @@ import com.iamdilipkumar.movies.movies.models.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +65,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ImageView mPoster;
 
         @Nullable
+        @BindView(R.id.ll_movie_info)
+        LinearLayout mMovieLayout;
+
+        @Nullable
         @BindView(R.id.iv_like)
         ImageView mLike;
 
@@ -69,7 +76,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
 
             ButterKnife.bind(this, itemView);
+
+            Random rand = new Random();
+
+            assert mMovieLayout != null;
+            mMovieLayout.setBackgroundColor(Color.rgb(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
+
+            assert mPoster != null;
             mPoster.setOnClickListener(this);
+
+            assert mLike != null;
             mLike.setOnClickListener(this);
 
         }
@@ -88,7 +104,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         public void onLike() {
-            mLike.setImageResource(R.drawable.ic_heart);
+
         }
 
         @Override
@@ -99,6 +115,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     mOnClickListener.onMovieItemClick(clickedPosition);
                     break;
                 case R.id.iv_like:
+                    mLike.setImageResource(R.drawable.ic_heart);
                     mOnClickListener.onLikeItemClick(clickedPosition);
                     break;
             }

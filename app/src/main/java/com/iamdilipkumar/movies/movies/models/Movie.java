@@ -20,7 +20,7 @@ import java.util.List;
  * @version 1.0
  */
 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
     @SerializedName("poster_path")
     @Expose
@@ -137,4 +137,44 @@ public class Movie implements Serializable {
     public Double getVoteAverage() {
         return voteAverage;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(posterPath);
+        dest.writeString(overview);
+        dest.writeString(releaseDate);
+        dest.writeInt(id);
+        dest.writeString(originalTitle);
+        dest.writeString(originalLanguage);
+        dest.writeString(title);
+        dest.writeString(backdropPath);
+    }
+
+    protected Movie(Parcel in) {
+        posterPath = in.readString();
+        overview = in.readString();
+        releaseDate = in.readString();
+        id = in.readInt();
+        originalTitle = in.readString();
+        originalLanguage = in.readString();
+        title = in.readString();
+        backdropPath = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.iamdilipkumar.movies.movies.adapters.ReviewsAdapter;
@@ -70,6 +71,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     @BindString(R.string.description_empty)
     String mEmptyDescription;
 
+    @BindView(R.id.sv_details)
+    ScrollView mMainScroll;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -87,6 +90,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     private final static String STATE_REVIEWS = "reviews_state";
     private final static String STATE_TRAILERS_LOADED = "trailers_load_state";
     private final static String STATE_REVIEWS_LOADED = "reviews_load_state";
+    private final static String STATE_SCROLL = "movie_scroll_state";
 
     private boolean mIsLoadedTrailers = false;
     private boolean mIsLoadedReviews = false;
@@ -95,7 +99,6 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_detail);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail);
 
         mCompositeDisposable = new CompositeDisposable();
@@ -127,9 +130,9 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
      */
     private void loadData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            movie = (Movie) savedInstanceState.getSerializable(PARAMS_MOVIE);
+            movie = (Movie) savedInstanceState.getParcelable(PARAMS_MOVIE);
         } else {
-            movie = (Movie) getIntent().getSerializableExtra(PARAMS_MOVIE);
+            movie = (Movie) getIntent().getParcelableExtra(PARAMS_MOVIE);
         }
 
         if (movie != null) {
@@ -154,6 +157,8 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
 
                         mTrailersAdapter = new TrailersAdapter(mTrailers, this);
                         mTrailersList.setAdapter(mTrailersAdapter);
+                    } else {
+                        mTrailersNetworkText.setText(mEmptyTrailers);
                     }
 
                     if (mReviews.size() > 0) {
@@ -161,10 +166,16 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
 
                         mReviewsAdapter = new ReviewsAdapter(mReviews);
                         mReviewsList.setAdapter(mReviewsAdapter);
+                    } else {
+                        mReviewsNetworkText.setText(mEmptyReviews);
                     }
                 } else {
                     loadTrailersAndReviews(String.valueOf(movie.getId()));
                 }
+
+                int[] scrollPositions = savedInstanceState.getIntArray(STATE_SCROLL);
+                mMainScroll.scrollTo(scrollPositions[0], scrollPositions[1]);
+
             } else {
                 loadTrailersAndReviews(String.valueOf(movie.getId()));
             }
@@ -292,11 +303,12 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
         ArrayList<Review> reviewsList = new ArrayList<>();
         reviewsList.addAll(mReviews);
 
-        outState.putSerializable(PARAMS_MOVIE, movie);
+        outState.putParcelable(PARAMS_MOVIE, movie);
         outState.putParcelableArrayList(STATE_TRAILERS, trailersList);
         outState.putParcelableArrayList(STATE_REVIEWS, reviewsList);
         outState.putBoolean(STATE_TRAILERS_LOADED, mIsLoadedTrailers);
         outState.putBoolean(STATE_REVIEWS_LOADED, mIsLoadedReviews);
+        outState.putIntArray(STATE_SCROLL, new int[]{mMainScroll.getScrollX(), mMainScroll.getScrollY()});
 
         super.onSaveInstanceState(outState);
     }
