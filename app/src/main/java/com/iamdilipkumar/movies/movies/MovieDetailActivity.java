@@ -78,10 +78,10 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
 
     protected static final String PARAMS_MOVIE = "movie";
 
-    private List<Trailer> mTrailers;
+    private List<Trailer> mTrailers = new ArrayList<>();
     private TrailersAdapter mTrailersAdapter;
 
-    private List<Review> mReviews;
+    private List<Review> mReviews = new ArrayList<>();
     private ReviewsAdapter mReviewsAdapter;
 
     private Movie movie;
@@ -130,9 +130,9 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
      */
     private void loadData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            movie = (Movie) savedInstanceState.getParcelable(PARAMS_MOVIE);
+            movie = savedInstanceState.getParcelable(PARAMS_MOVIE);
         } else {
-            movie = (Movie) getIntent().getParcelableExtra(PARAMS_MOVIE);
+            movie = getIntent().getParcelableExtra(PARAMS_MOVIE);
         }
 
         if (movie != null) {
@@ -174,6 +174,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
                 }
 
                 int[] scrollPositions = savedInstanceState.getIntArray(STATE_SCROLL);
+                assert scrollPositions != null;
                 mMainScroll.scrollTo(scrollPositions[0], scrollPositions[1]);
 
             } else {

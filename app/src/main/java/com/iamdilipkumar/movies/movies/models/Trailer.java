@@ -52,28 +52,6 @@ public class Trailer implements Parcelable {
     @Expose
     private String type;
 
-    protected Trailer(Parcel in) {
-        id = in.readString();
-        iso6391 = in.readString();
-        iso31661 = in.readString();
-        key = in.readString();
-        name = in.readString();
-        site = in.readString();
-        type = in.readString();
-    }
-
-    public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
-        @Override
-        public Trailer createFromParcel(Parcel in) {
-            return new Trailer(in);
-        }
-
-        @Override
-        public Trailer[] newArray(int size) {
-            return new Trailer[size];
-        }
-    };
-
     public String getId() {
         return id;
     }
@@ -121,4 +99,26 @@ public class Trailer implements Parcelable {
         dest.writeString(site);
         dest.writeString(type);
     }
+
+    protected Trailer(Parcel in) {
+        id = in.readString();
+        iso6391 = in.readString();
+        iso31661 = in.readString();
+        key = in.readString();
+        name = in.readString();
+        site = in.readString();
+        type = in.readString();
+    }
+
+    public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
+        @Override
+        public Trailer createFromParcel(Parcel in) {
+            return new Trailer(in);
+        }
+
+        @Override
+        public Trailer[] newArray(int size) {
+            return new Trailer[size];
+        }
+    };
 }

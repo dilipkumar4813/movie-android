@@ -78,6 +78,8 @@ public class Movie implements Parcelable {
     @Expose
     private Double voteAverage;
 
+    private boolean mLiked = false;
+
     public String getPosterPath() {
         return NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_POSTER_SIZE + posterPath;
     }
@@ -136,6 +138,14 @@ public class Movie implements Parcelable {
 
     public Double getVoteAverage() {
         return voteAverage;
+    }
+
+    public boolean getmLiked() {
+        return mLiked;
+    }
+
+    public void setmLiked(boolean mIsSelected) {
+        this.mLiked = mIsSelected;
     }
 
     @Override

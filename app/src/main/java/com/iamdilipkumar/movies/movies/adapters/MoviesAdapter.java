@@ -103,8 +103,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Picasso.with(context).load(url).into(mPoster);
         }
 
-        public void onLike() {
-
+        public void onLike(int position) {
+            Movie movie = movies.get(position);
+            if(!movie.getmLiked()){
+                mLike.setImageResource(R.drawable.ic_heart);
+                movie.setmLiked(true);
+            }else{
+                mLike.setImageResource(R.drawable.ic_heart_stroke);
+                movie.setmLiked(false);
+            }
         }
 
         @Override
@@ -115,7 +122,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     mOnClickListener.onMovieItemClick(clickedPosition);
                     break;
                 case R.id.iv_like:
-                    mLike.setImageResource(R.drawable.ic_heart);
                     mOnClickListener.onLikeItemClick(clickedPosition);
                     break;
             }
@@ -191,7 +197,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
 
                 movieViewHolder.itemView.startAnimation(animation);
-                Log.d("test", "" + lastPosition);
+                //Log.d("test", "" + lastPosition);
             }
             lastPosition++;
         } else if (holder instanceof LoadingViewHolder) {

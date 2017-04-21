@@ -2,9 +2,11 @@ package com.iamdilipkumar.movies.movies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +86,8 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
                     Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
                     break;
             }
+        } else {
+            mFromSavedState = false;
         }
     }
 
@@ -101,22 +105,27 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     private final static String STATE_SPINNER = "spinner_state";
     private final static String STATE_LIST = "movies_list_state";
+    private final static String STATE_RECYCLER = "recycler_scroll_state";
+    private final static String STATE_SORT_ORDER = "sort_order_state";
+    private final static String STATE_CURRENT_PAGE = "page_State";
+    private final static String STATE_TOTAL_PAGES = "pages_total_state";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_movies_list);
 
         if (savedInstanceState != null) {
-            //mMovies = savedInstanceState.getParcelableArrayList("movielist");
+            mMovies = savedInstanceState.getParcelableArrayList(STATE_LIST);
             mFromSavedState = savedInstanceState.getBoolean(STATE_SPINNER);
+            mSortOrder = savedInstanceState.getString(STATE_SORT_ORDER);
+            sCurrentPage = savedInstanceState.getInt(STATE_CURRENT_PAGE);
+            sTotalPages = savedInstanceState.getInt(STATE_TOTAL_PAGES);
+            mLoadMore = true;
         }
-        setContentView(R.layout.activity_movies_list);
 
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
-
-        /*int column = getResources().getInteger(R.integer.grid_columns);
-        mGridLayoutManager = new GridLayoutManager(this, column);*/
 
         mGridLayoutManager = new GridLayoutManager(this, 2);
 
@@ -140,6 +149,10 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         mMoviesList.setAdapter(mAdapter);
         RecyclerView.OnScrollListener recyclerViewScroll = new OnInfiniteScrollListener(this, mGridLayoutManager);
         mMoviesList.addOnScrollListener(recyclerViewScroll);
+
+        if (mMovies.size() > 0) {
+            showList();
+        }
     }
 
     /**
@@ -253,19 +266,28 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     @Override
     public void onLikeItemClick(int position) {
+        Log.d("test", "" + position);
         MoviesAdapter.MovieViewHolder view = (MoviesAdapter.MovieViewHolder) mMoviesList.findViewHolderForAdapterPosition(position);
-        view.onLike();
+        view.onLike(position);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mGridLayoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_RECYCLER));
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_SPINNER, true);
-        //outState.putParcelableArrayList("movielist",mMovies);
+        outState.putParcelableArrayList(STATE_LIST, mMovies);
+        Parcelable mListState = mGridLayoutManager.onSaveInstanceState();
+        outState.putParcelable(STATE_RECYCLER, mListState);
+        outState.putString(STATE_SORT_ORDER, mSortOrder);
+        outState.putInt(STATE_CURRENT_PAGE, sCurrentPage);
+        outState.putInt(STATE_TOTAL_PAGES, sTotalPages);
         super.onSaveInstanceState(outState);
     }
 
@@ -277,6 +299,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     @Override
     public void loadMoreData() {
+        Log.d("test", "Total pages" + sTotalPages + " Current page" + sCurrentPage);
         if (mLoadMore && (sTotalPages >= sCurrentPage)) {
             mLoadMore = false;
             mMovies.add(null);
