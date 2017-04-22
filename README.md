@@ -9,6 +9,8 @@ Android application that will show a list of movies - either popular, top rated 
 * View movie details
 * Landscape view
 * Infinite scroll
+* Trailers for movies
+* Reviews for the movies
 
 ## Movies list
 
