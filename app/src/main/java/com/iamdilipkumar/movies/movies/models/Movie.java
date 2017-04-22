@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.iamdilipkumar.movies.movies.utilities.network.NetworkUtils;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -78,7 +77,16 @@ public class Movie implements Parcelable {
     @Expose
     private Double voteAverage;
 
-    private boolean mLiked = false;
+    public Movie(String posterPath, int id, String overview, String releaseDate, String originalLanguage, String title, String backdropPath, Double voteAverage) {
+        this.posterPath = posterPath;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.id = id;
+        this.originalLanguage = originalLanguage;
+        this.title = title;
+        this.backdropPath = backdropPath;
+        this.voteAverage = voteAverage;
+    }
 
     public String getPosterPath() {
         return NetworkUtils.MOVIE_IMAGE_BASE_URL + NetworkUtils.MOVIE_POSTER_SIZE + posterPath;
@@ -140,14 +148,6 @@ public class Movie implements Parcelable {
         return voteAverage;
     }
 
-    public boolean getmLiked() {
-        return mLiked;
-    }
-
-    public void setmLiked(boolean mIsSelected) {
-        this.mLiked = mIsSelected;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -163,6 +163,7 @@ public class Movie implements Parcelable {
         dest.writeString(originalLanguage);
         dest.writeString(title);
         dest.writeString(backdropPath);
+        dest.writeDouble(voteAverage);
     }
 
     protected Movie(Parcel in) {
@@ -174,6 +175,7 @@ public class Movie implements Parcelable {
         originalLanguage = in.readString();
         title = in.readString();
         backdropPath = in.readString();
+        voteAverage = in.readDouble();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

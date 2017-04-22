@@ -36,4 +36,8 @@ public class OnInfiniteScrollListener extends RecyclerView.OnScrollListener {
             mInfiniteScrollListener.loadMoreData();
         }
     }
+
+    public interface InfiniteScrollListener {
+        void loadMoreData();
+    }
 }

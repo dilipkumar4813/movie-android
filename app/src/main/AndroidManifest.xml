@@ -24,6 +24,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MoviesListActivity" />
         </activity>
+
+        <provider
+            android:name=".data.MoviesContentProvider"
+            android:authorities="com.iamdilipkumar.movies.movies"
+            android:exported="false"/>
     </application>
 
 </manifest>

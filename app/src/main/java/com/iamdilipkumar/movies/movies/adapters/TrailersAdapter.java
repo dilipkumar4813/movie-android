@@ -89,8 +89,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
          * @param type - Type of trailer
          */
         private void onBind(String name, String type) {
-            Log.d("test", name + " " + type);
-
             assert mTrailerName != null;
             mTrailerName.setText(name);
 

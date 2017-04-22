@@ -1,17 +1,14 @@
 package com.iamdilipkumar.movies.movies.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.iamdilipkumar.movies.movies.R;
@@ -19,7 +16,6 @@ import com.iamdilipkumar.movies.movies.models.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,8 +37,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final static int ITEM_TYPE_MOVIE = 1;
     public final static int ITEM_TYPE_LOADING = 0;
 
-    private int lastPosition = 0;
-
     public MoviesAdapter(ArrayList<Movie> moviesResult, MovieItemClickListener onClickListener) {
         this.movies = moviesResult;
         this.mOnClickListener = onClickListener;
@@ -50,44 +44,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface MovieItemClickListener {
         void onMovieItemClick(int position);
-
-        void onLikeItemClick(int position);
     }
 
     /**
      * View holder class for movies type
      */
-    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        // Imageview to display the poster
         @Nullable
         @BindView(R.id.iv_movie_poster)
         ImageView mPoster;
 
-        @Nullable
-        @BindView(R.id.ll_movie_info)
-        LinearLayout mMovieLayout;
-
-        @Nullable
-        @BindView(R.id.iv_like)
-        ImageView mLike;
-
         MovieViewHolder(View itemView) {
             super(itemView);
-
             ButterKnife.bind(this, itemView);
-
-            Random rand = new Random();
-
-            assert mMovieLayout != null;
-            mMovieLayout.setBackgroundColor(Color.rgb(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
 
             assert mPoster != null;
             mPoster.setOnClickListener(this);
-
-            assert mLike != null;
-            mLike.setOnClickListener(this);
-
         }
 
         /**
@@ -103,26 +76,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Picasso.with(context).load(url).into(mPoster);
         }
 
-        public void onLike(int position) {
-            Movie movie = movies.get(position);
-            if(!movie.getmLiked()){
-                mLike.setImageResource(R.drawable.ic_heart);
-                movie.setmLiked(true);
-            }else{
-                mLike.setImageResource(R.drawable.ic_heart_stroke);
-                movie.setmLiked(false);
-            }
-        }
-
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
             switch (v.getId()) {
                 case R.id.iv_movie_poster:
                     mOnClickListener.onMovieItemClick(clickedPosition);
-                    break;
-                case R.id.iv_like:
-                    mOnClickListener.onLikeItemClick(clickedPosition);
                     break;
             }
         }
@@ -139,11 +98,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         LoadingViewHolder(View itemView) {
             super(itemView);
-        }
-
-        void onBind() {
-            //assert mProgressBar != null;
-            //mProgressBar.setIndeterminate(true);
         }
     }
 
@@ -197,13 +151,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
 
                 movieViewHolder.itemView.startAnimation(animation);
-                //Log.d("test", "" + lastPosition);
             }
-            lastPosition++;
-        } else if (holder instanceof LoadingViewHolder) {
+        } /*else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
-            loadingViewHolder.onBind();
-        }
+        }*/
 
     }
 

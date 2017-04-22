@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +18,11 @@ import android.widget.Toast;
 import com.iamdilipkumar.movies.movies.adapters.MoviesAdapter;
 import com.iamdilipkumar.movies.movies.models.Movie;
 import com.iamdilipkumar.movies.movies.models.MoviesResult;
+import com.iamdilipkumar.movies.movies.utilities.DatabaseUtils;
 import com.iamdilipkumar.movies.movies.utilities.network.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.network.NetworkUtils;
 import com.iamdilipkumar.movies.movies.utilities.ShareUtils;
 import com.iamdilipkumar.movies.movies.views.listeners.OnInfiniteScrollListener;
-import com.iamdilipkumar.movies.movies.views.listeners.InfiniteScrollListener;
 
 import java.util.ArrayList;
 
@@ -43,7 +42,7 @@ import io.reactivex.schedulers.Schedulers;
  * @version 1.0
  */
 
-public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, InfiniteScrollListener {
+public class MoviesListActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener, OnInfiniteScrollListener.InfiniteScrollListener {
 
     @BindView(R.id.pb_loading_data)
     ProgressBar mLoading;
@@ -63,10 +62,14 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     @BindString(R.string.sort_top_rated)
     String sortTopRated;
 
+    @BindString(R.string.empty_favourite_list)
+    String favouritesEmpty;
+
     @OnItemSelected(R.id.s_sort_options)
-    void spinnerItemSelected(Spinner spinner, int position) {
+    void spinnerItemSelected(int position) {
+        mErrorText.setVisibility(View.INVISIBLE);
+
         if (!mFromSavedState) {
-            String sort = spinner.getItemAtPosition(position).toString();
             sCurrentPage = 1;
             mMovies.clear();
 
@@ -83,7 +86,17 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
                     break;
                 case 2:
                     setTitle(R.string.spinner_favourite);
-                    Toast.makeText(this, sort, Toast.LENGTH_SHORT).show();
+                    mSortOrder = getString(R.string.spinner_favourite);
+                    mMovies.addAll(DatabaseUtils.getMoviesFromFavourites(this));
+
+                    if(mMovies.size()>0){
+                        mAdapter.notifyDataSetChanged();
+                    }else{
+                        doNotShowList();
+                        mErrorText.setText(favouritesEmpty);
+                        mErrorText.setVisibility(View.VISIBLE);
+                    }
+
                     break;
             }
         } else {
@@ -265,13 +278,6 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     @Override
-    public void onLikeItemClick(int position) {
-        Log.d("test", "" + position);
-        MoviesAdapter.MovieViewHolder view = (MoviesAdapter.MovieViewHolder) mMoviesList.findViewHolderForAdapterPosition(position);
-        view.onLike(position);
-    }
-
-    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
@@ -299,8 +305,7 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
 
     @Override
     public void loadMoreData() {
-        Log.d("test", "Total pages" + sTotalPages + " Current page" + sCurrentPage);
-        if (mLoadMore && (sTotalPages >= sCurrentPage)) {
+        if (mLoadMore && (sTotalPages >= sCurrentPage) && !mSortOrder.equalsIgnoreCase(getString(R.string.spinner_favourite))) {
             mLoadMore = false;
             mMovies.add(null);
             mAdapter.notifyItemInserted(mMovies.size() - 1);

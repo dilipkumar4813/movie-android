@@ -49,4 +49,7 @@
     <string name="trailers_list_empty">No Trailers available at the moment</string>
     <string name="reviews_list_empty">No Reviews available at the moment</string>
     <string name="network_error">Oops! something went wrong</string>
+    <string name="add_to_favourite">Add to favourites</string>
+    <string name="added_to_favourite">Added to favourites</string>
+    <string name="empty_favourite_list">Your favourites are empty</string>
 </resources>

@@ -9,4 +9,5 @@
     <dimen name="main_title_font_size">28sp</dimen>
     <dimen name="sub_title_font_size">18sp</dimen>
     <dimen name="normal_text_font_size">15sp</dimen>
+    <dimen name="widget_margins">10dp</dimen>
 </resources>

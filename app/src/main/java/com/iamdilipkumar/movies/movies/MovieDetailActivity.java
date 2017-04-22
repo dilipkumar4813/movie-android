@@ -10,7 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import com.iamdilipkumar.movies.movies.models.Review;
 import com.iamdilipkumar.movies.movies.models.ReviewsResult;
 import com.iamdilipkumar.movies.movies.models.Trailer;
 import com.iamdilipkumar.movies.movies.models.TrailersResult;
+import com.iamdilipkumar.movies.movies.utilities.DatabaseUtils;
 import com.iamdilipkumar.movies.movies.utilities.network.MoviesInterface;
 import com.iamdilipkumar.movies.movies.utilities.network.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -32,6 +35,7 @@ import java.util.List;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -74,6 +78,24 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     @BindView(R.id.sv_details)
     ScrollView mMainScroll;
 
+    @BindView(R.id.iv_heart)
+    ImageView mHeart;
+
+    @BindView(R.id.ll_like)
+    LinearLayout mLike;
+
+    @BindView(R.id.tv_favourite)
+    TextView mFavouriteText;
+
+    @BindString(R.string.added_to_favourite)
+    String mAddedToFavourite;
+
+    @BindString(R.string.add_to_favourite)
+    String mAddToFavourite;
+
+    @BindView(R.id.iv_banner)
+    ImageView mBanner;
+
     private CompositeDisposable mCompositeDisposable;
 
     protected static final String PARAMS_MOVIE = "movie";
@@ -85,6 +107,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     private ReviewsAdapter mReviewsAdapter;
 
     private Movie movie;
+    private boolean liked = false;
 
     private final static String STATE_TRAILERS = "trailers_state";
     private final static String STATE_REVIEWS = "reviews_state";
@@ -95,6 +118,23 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
     private boolean mIsLoadedTrailers = false;
     private boolean mIsLoadedReviews = false;
     private ActivityMovieDetailBinding mBinding;
+
+    @OnClick(R.id.ll_like)
+    void addOrRemoveFavourite() {
+        if (!liked) {
+            liked = true;
+            mHeart.setImageResource(R.drawable.ic_heart);
+            mHeart.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+            mFavouriteText.setText(mAddedToFavourite);
+            DatabaseUtils.addMovieToFavourites(this, movie);
+        } else {
+            liked = false;
+            mHeart.setImageResource(R.drawable.ic_heart_stroke);
+            mHeart.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+            mFavouriteText.setText(mAddToFavourite);
+            DatabaseUtils.removeMovieFromFavourites(this, movie.getId());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +177,7 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
 
         if (movie != null) {
             Picasso.with(this).load(movie.getPosterPath()).into(mPosterImage);
+            Picasso.with(this).load(movie.getBackdropPath()).into(mBanner);
 
             if (movie.getOverview().isEmpty()) {
                 movie.setOverview(mEmptyDescription);
@@ -180,6 +221,16 @@ public class MovieDetailActivity extends AppCompatActivity implements TrailersAd
             } else {
                 loadTrailersAndReviews(String.valueOf(movie.getId()));
             }
+        }
+
+        liked = DatabaseUtils.checkIfMovieFavourite(getBaseContext(), movie.getId());
+
+        if (liked) {
+            mFavouriteText.setText(mAddedToFavourite);
+            mHeart.setImageResource(R.drawable.ic_heart);
+        } else {
+            mFavouriteText.setText(mAddToFavourite);
+            mHeart.setImageResource(R.drawable.ic_heart_stroke);
         }
     }
 

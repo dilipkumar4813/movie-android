@@ -25,31 +25,35 @@
                 android:text="@{movie.title}"
                 tools:text="@string/movie_title" />
 
+            <ImageView
+                android:id="@+id/iv_banner"
+                android:layout_width="match_parent"
+                android:contentDescription="@string/app_name"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_start_and_end"
                 android:layout_marginRight="@dimen/margin_start_and_end"
                 android:layout_marginTop="@dimen/short_spacing"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_movie_poster"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/movie_poster"
                     android:scaleType="fitStart" />
 
                 <LinearLayout
                     android:id="@+id/ll_info"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/short_spacing"
                     android:layout_marginStart="@dimen/short_spacing"
-                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -69,6 +73,30 @@
                         android:layout_width="wrap_content"
                         android:text="@{@string/movie_language+movie.originalLanguage}"
                         tools:text="@string/movie_language" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_like"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/widget_margins"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_heart"
+                            android:layout_width="wrap_content"
+                            android:contentDescription="@string/add_to_favourite"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_heart_stroke"/>
+
+                        <TextView
+                            android:id="@+id/tv_favourite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_to_favourite"
+                            android:layout_marginLeft="@dimen/widget_margins"
+                            android:layout_marginStart="@dimen/widget_margins"
+                            android:layout_gravity="center_vertical"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 
