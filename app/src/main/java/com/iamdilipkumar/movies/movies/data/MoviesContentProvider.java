@@ -20,23 +20,23 @@ import android.support.annotation.Nullable;
 
 public class MoviesContentProvider extends ContentProvider {
 
-    public static final int TASKS = 100;
-    public static final int TASK_WITH_ID = 101;
+    public static final int FAVOURITES = 100;
+    public static final int FAVOURITES_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
+    /**
+     * Method to match the URI to check which part of the database
+     * operation that it should perform
+     *
+     * @return - interger to match the operation to be perforrmed
+     */
     public static UriMatcher buildUriMatcher() {
 
-        // Initialize a UriMatcher with no matches by passing in NO_MATCH to the constructor
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        /*
-          All paths added to the UriMatcher have a corresponding int.
-          For each kind of uri you may want to access, add the corresponding match with addURI.
-          The two calls below add matches for the task directory and a single item by ID.
-         */
-        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS, TASKS);
-        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS + "/#", TASK_WITH_ID);
+        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS, FAVOURITES);
+        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS + "/#", FAVOURITES_WITH_ID);
 
         return uriMatcher;
     }
@@ -50,20 +50,27 @@ public class MoviesContentProvider extends ContentProvider {
         return true;
     }
 
+    /**
+     * Method to query database table based on the URI
+     *
+     * @param uri - used to fetching the integer to determine the operation
+     * @param projection - The columns that has to be displayed
+     * @param selection - The selection condition
+     * @param selectionArgs - selection arguments
+     * @param sortOrder - The order in which the query has to return the results
+     *
+     * @return - returns the cursor containing the results
+     */
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        // Get access to underlying database (read-only for query)
         final SQLiteDatabase db = mMoviesHelper.getReadableDatabase();
 
-        // Write URI match code and set a variable to return a Cursor
         int match = sUriMatcher.match(uri);
         Cursor retCursor;
 
-        // Query for the tasks directory and write a default case
         switch (match) {
-            // Query for the tasks directory
-            case TASKS:
+            case FAVOURITES:
                 retCursor =  db.query(MoviesContract.MoviesTable.TABLE_NAME,
                         projection,
                         selection,
@@ -72,7 +79,7 @@ public class MoviesContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
-            case TASK_WITH_ID:
+            case FAVOURITES_WITH_ID:
                 String movieSelection = "movieid="+uri.getPathSegments().get(1);
                 retCursor =  db.query(MoviesContract.MoviesTable.TABLE_NAME,
                         projection,
@@ -90,6 +97,14 @@ public class MoviesContentProvider extends ContentProvider {
         return retCursor;
     }
 
+    /**
+     * Method to insert data within the database table
+     *
+     * @param uri - Used for matching the operation
+     * @param values - The content values that has to be entered within the database table
+     *
+     * @return - Uri based on the result of the operation
+     */
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
@@ -99,7 +114,7 @@ public class MoviesContentProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case TASKS:
+            case FAVOURITES:
                 long id = db.insert(MoviesContract.MoviesTable.TABLE_NAME, null, values);
                 if ( id > 0 ) {
                     returnUri = ContentUris.withAppendedId(MoviesContract.MoviesTable.CONTENT_URI, id);
@@ -115,6 +130,15 @@ public class MoviesContentProvider extends ContentProvider {
         return returnUri;
     }
 
+
+    /**
+     * Method to delete favourites from the database table
+     *
+     * @param uri - To determine the operation
+     * @param selection - The selection criteria for deletion
+     * @param selectionArgs - Selection arguments
+     * @return - Integer determining the result of the oepration
+     */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mMoviesHelper.getWritableDatabase();
@@ -123,7 +147,7 @@ public class MoviesContentProvider extends ContentProvider {
         int tasksDeleted;
 
         switch (match) {
-            case TASK_WITH_ID:
+            case FAVOURITES_WITH_ID:
                 String id = uri.getPathSegments().get(1);
                 tasksDeleted = db.delete(MoviesContract.MoviesTable.TABLE_NAME, "movieid=?", new String[]{id});
                 break;

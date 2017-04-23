@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/iv_banner"
                 android:layout_width="match_parent"
-                android:contentDescription="@string/app_name"
+                android:contentDescription="@string/movie_banner"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"/>
 

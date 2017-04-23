@@ -1,5 +1,7 @@
 package com.iamdilipkumar.movies.movies.utilities.network;
 
+import com.iamdilipkumar.movies.movies.BuildConfig;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -21,7 +23,7 @@ class MoviesApiInterceptor implements Interceptor {
 
     private final static String PARAM_API = "api_key";
 
-    private final static String API_KEY = "";
+    private final static String API_KEY = BuildConfig.API_KEY;
 
     @Override
     public Response intercept(Chain chain) throws IOException {

@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.iamdilipkumar.movies.movies.adapters.MoviesAdapter;
 import com.iamdilipkumar.movies.movies.models.Movie;
@@ -250,11 +249,21 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         mLoadMore = true;
     }
 
+    /**
+     * Method to display the error during network operations
+     *
+     * @param error -Throwable to access the localized message
+     */
     private void apiError(Throwable error) {
         hideLoadingItem();
-        Toast.makeText(this, "Error " + error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        mErrorText.setText(error.getLocalizedMessage());
+        mErrorText.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Method to hide the last item of the item
+     * If the item in the recyclerview list is a progress bar
+     */
     private void hideLoadingItem() {
         if (mMovies.size() > 0) {
             if (mAdapter.getItemViewType(mMovies.size() - 1) == MoviesAdapter.ITEM_TYPE_LOADING) {
@@ -303,6 +312,10 @@ public class MoviesListActivity extends AppCompatActivity implements MoviesAdapt
         mCompositeDisposable.clear();
     }
 
+    /**
+     * Method to load more items within the recycler view
+     * If the the current page is greater than total pages
+     */
     @Override
     public void loadMoreData() {
         if (mLoadMore && (sTotalPages >= sCurrentPage) && !mSortOrder.equalsIgnoreCase(getString(R.string.spinner_favourite))) {
